@@ -5,6 +5,8 @@ import { studentsApi, coursesApi, gradesApi } from '@/lib/api';
 import { Student, Course, Grade } from '@/types';
 import { exportToCSV, sortByGPA } from '@/lib/utils';
 import dynamic from 'next/dynamic';
+import AnimatedSection from '@/components/AnimatedSection';
+import AnimatedCard from '@/components/AnimatedCard';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -106,17 +108,39 @@ export default function ReportsPage() {
     chart: {
       type: 'line' as const,
       toolbar: { show: true },
+      background: 'transparent',
+    },
+    theme: {
+      mode: 'dark' as const,
     },
     xaxis: {
       categories: courses.map(c => c.code),
+      labels: {
+        style: {
+          colors: '#94a3b8',
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#94a3b8',
+        },
+      },
     },
     colors: ['#3B82F6'],
     title: {
       text: 'Course Enrollments Over Time',
       align: 'left' as const,
+      style: {
+        color: '#f1f5f9',
+      },
     },
     stroke: {
       curve: 'smooth' as const,
+    },
+    grid: {
+      borderColor: '#334155',
     },
   };
 
@@ -133,6 +157,10 @@ export default function ReportsPage() {
     chart: {
       type: 'bar' as const,
       toolbar: { show: true },
+      background: 'transparent',
+    },
+    theme: {
+      mode: 'dark' as const,
     },
     plotOptions: {
       bar: {
@@ -142,11 +170,29 @@ export default function ReportsPage() {
     },
     xaxis: {
       categories: coursePerformance.slice(0, 10).map(cp => cp.course.code),
+      labels: {
+        style: {
+          colors: '#94a3b8',
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#94a3b8',
+        },
+      },
     },
     colors: ['#10B981'],
     title: {
       text: 'Top 10 Courses by Average Grade',
       align: 'left' as const,
+      style: {
+        color: '#f1f5f9',
+      },
+    },
+    grid: {
+      borderColor: '#334155',
     },
   };
 
@@ -159,186 +205,198 @@ export default function ReportsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
-        <p className="text-gray-600">View and export comprehensive academic reports</p>
-      </div>
+      <AnimatedSection animation="fadeIn">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
+          <p className="text-gray-600 dark:text-gray-400">View and export comprehensive academic reports</p>
+        </div>
+      </AnimatedSection>
 
       {/* Export Buttons */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Export Reports</h2>
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={handleExportEnrollments}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            📊 Export Course Enrollments (CSV)
-          </button>
-          <button
-            onClick={handleExportTopStudents}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-          >
-            🏆 Export Top Students (CSV)
-          </button>
-          <button
-            onClick={handleExportGrades}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            📝 Export All Grades (CSV)
-          </button>
+      <AnimatedCard delay={0.1}>
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Export Reports</h2>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={handleExportEnrollments}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+            >
+              📊 Export Course Enrollments (CSV)
+            </button>
+            <button
+              onClick={handleExportTopStudents}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors"
+            >
+              🏆 Export Top Students (CSV)
+            </button>
+            <button
+              onClick={handleExportGrades}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 transition-colors"
+            >
+              📝 Export All Grades (CSV)
+            </button>
+          </div>
         </div>
-      </div>
+      </AnimatedCard>
 
       {/* Report Tabs */}
-      <div className="bg-white rounded-lg shadow-md">
-        <div className="border-b border-gray-200">
-          <nav className="flex -mb-px">
-            <button
-              onClick={() => setSelectedReport('enrollments')}
-              className={`px-6 py-3 text-sm font-medium border-b-2 ${
-                selectedReport === 'enrollments'
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Enrollment Trends
-            </button>
-            <button
-              onClick={() => setSelectedReport('performance')}
-              className={`px-6 py-3 text-sm font-medium border-b-2 ${
-                selectedReport === 'performance'
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Course Performance
-            </button>
-          </nav>
-        </div>
+      <AnimatedCard delay={0.2}>
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700">
+          <div className="border-b border-gray-200 dark:border-slate-700">
+            <nav className="flex -mb-px">
+              <button
+                onClick={() => setSelectedReport('enrollments')}
+                className={`px-6 py-3 text-sm font-medium border-b-2 ${
+                  selectedReport === 'enrollments'
+                    ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-slate-600'
+                }`}
+              >
+                Enrollment Trends
+              </button>
+              <button
+                onClick={() => setSelectedReport('performance')}
+                className={`px-6 py-3 text-sm font-medium border-b-2 ${
+                  selectedReport === 'performance'
+                    ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-slate-600'
+                }`}
+              >
+                Course Performance
+              </button>
+            </nav>
+          </div>
 
-        <div className="p-6">
-          {selectedReport === 'enrollments' ? (
-            <div>
-              <Chart
-                options={enrollmentChartOptions}
-                series={enrollmentChartSeries}
-                type="line"
-                height={400}
-              />
-            </div>
-          ) : (
-            <div>
-              <Chart
-                options={performanceChartOptions}
-                series={performanceChartSeries}
-                type="bar"
-                height={400}
-              />
-            </div>
-          )}
+          <div className="p-6">
+            {selectedReport === 'enrollments' ? (
+              <div>
+                <Chart
+                  options={enrollmentChartOptions}
+                  series={enrollmentChartSeries}
+                  type="line"
+                  height={400}
+                />
+              </div>
+            ) : (
+              <div>
+                <Chart
+                  options={performanceChartOptions}
+                  series={performanceChartSeries}
+                  type="bar"
+                  height={400}
+                />
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </AnimatedCard>
 
       {/* Detailed Reports Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Course Enrollments */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Course Enrollments</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="border-b">
-                <tr>
-                  <th className="pb-2 text-left text-gray-600">Course</th>
-                  <th className="pb-2 text-right text-gray-600">Students</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {courses.slice(0, 5).map((course) => (
-                  <tr key={course.id}>
-                    <td className="py-2">
-                      <div>
-                        <p className="font-medium text-gray-900">{course.code}</p>
-                        <p className="text-xs text-gray-500">{course.name}</p>
-                      </div>
-                    </td>
-                    <td className="py-2 text-right">
-                      <span className="inline-flex items-center px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
-                        {course.enrollmentCount}
-                      </span>
-                    </td>
+        <AnimatedCard delay={0.3}>
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Course Enrollments</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-gray-200 dark:border-slate-700">
+                  <tr>
+                    <th className="pb-2 text-left text-gray-600 dark:text-gray-400">Course</th>
+                    <th className="pb-2 text-right text-gray-600 dark:text-gray-400">Students</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
+                  {courses.slice(0, 5).map((course) => (
+                    <tr key={course.id}>
+                      <td className="py-2">
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-white">{course.code}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{course.name}</p>
+                        </div>
+                      </td>
+                      <td className="py-2 text-right">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium">
+                          {course.enrollmentCount}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        </AnimatedCard>
 
         {/* Top Performing Students */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Top Performing Students</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="border-b">
-                <tr>
-                  <th className="pb-2 text-left text-gray-600">Student</th>
-                  <th className="pb-2 text-right text-gray-600">GPA</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {sortByGPA(students, true).slice(0, 5).map((student) => (
-                  <tr key={student.id}>
-                    <td className="py-2">
-                      <div>
-                        <p className="font-medium text-gray-900">{student.name}</p>
-                        <p className="text-xs text-gray-500">{student.major}</p>
-                      </div>
-                    </td>
-                    <td className="py-2 text-right">
-                      <span className="font-bold text-blue-600">{student?.gpa?.toFixed(2)}</span>
-                    </td>
+        <AnimatedCard delay={0.4}>
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Top Performing Students</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-gray-200 dark:border-slate-700">
+                  <tr>
+                    <th className="pb-2 text-left text-gray-600 dark:text-gray-400">Student</th>
+                    <th className="pb-2 text-right text-gray-600 dark:text-gray-400">GPA</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
+                  {sortByGPA(students, true).slice(0, 5).map((student) => (
+                    <tr key={student.id}>
+                      <td className="py-2">
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-white">{student.name}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{student.major}</p>
+                        </div>
+                      </td>
+                      <td className="py-2 text-right">
+                        <span className="font-bold text-blue-600 dark:text-blue-400">{student?.gpa?.toFixed(2)}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        </AnimatedCard>
       </div>
 
       {/* Course Performance Table */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Course Performance Analysis</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Course</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Department</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Avg Grade</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Students</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {coursePerformance.map(({ course, averageGrade, studentsCount }) => (
-                <tr key={course.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="font-mono font-medium text-blue-600">{course.code}</p>
-                      <p className="text-sm text-gray-600">{course.name}</p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{course.department}</td>
-                  <td className="px-6 py-4 text-right">
-                    <span className={`font-bold ${averageGrade >= 85 ? 'text-green-600' : averageGrade >= 70 ? 'text-blue-600' : 'text-orange-600'}`}>
-                      {averageGrade > 0 ? averageGrade.toFixed(1) + '%' : 'N/A'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right text-gray-900">{studentsCount}</td>
+      <AnimatedSection animation="slideUp">
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Course Performance Analysis</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 dark:bg-slate-700 border-b border-gray-200 dark:border-slate-700">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Course</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Department</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Avg Grade</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Students</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
+                {coursePerformance.map(({ course, averageGrade, studentsCount }) => (
+                  <tr key={course.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="font-mono font-medium text-blue-600 dark:text-blue-400">{course.code}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{course.name}</p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600 dark:text-gray-400">{course.department}</td>
+                    <td className="px-6 py-4 text-right">
+                      <span className={`font-bold ${averageGrade >= 85 ? 'text-green-600 dark:text-green-400' : averageGrade >= 70 ? 'text-blue-600 dark:text-blue-400' : 'text-orange-600 dark:text-orange-400'}`}>
+                        {averageGrade > 0 ? averageGrade.toFixed(1) + '%' : 'N/A'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right text-gray-900 dark:text-white">{studentsCount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      </AnimatedSection>
     </div>
   );
 }

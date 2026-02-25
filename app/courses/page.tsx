@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { coursesApi, facultyApi } from '@/lib/api';
 import { Course, Faculty } from '@/types';
 import { filterCourses, paginate, getUniqueDepartments } from '@/lib/utils';
+import AnimatedSection from '@/components/AnimatedSection';
+import AnimatedCard from '@/components/AnimatedCard';
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -67,25 +69,27 @@ export default function CoursesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Courses</h1>
-          <p className="text-gray-600">Manage courses and faculty assignments</p>
+      <AnimatedSection animation="fadeIn">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Courses</h1>
+            <p className="text-gray-600 dark:text-gray-400">Manage courses and faculty assignments</p>
+          </div>
+          <Link
+            href="/courses/new"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            + Add Course
+          </Link>
         </div>
-        <Link
-          href="/courses/new"
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          + Add Course
-        </Link>
-      </div>
+      </AnimatedSection>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <AnimatedCard delay={0.1} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Search */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Search
             </label>
             <input
@@ -96,13 +100,13 @@ export default function CoursesPage() {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             />
           </div>
 
           {/* Department Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Department
             </label>
             <select
@@ -111,7 +115,7 @@ export default function CoursesPage() {
                 setSelectedDepartment(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             >
               <option value="">All Departments</option>
               {uniqueDepartments.map(dept => (
@@ -122,106 +126,108 @@ export default function CoursesPage() {
         </div>
 
         {/* Results count */}
-        <div className="mt-4 text-sm text-gray-600">
+        <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
           Showing {paginatedCourses.length} of {filteredCourses.length} courses
         </div>
-      </div>
+      </AnimatedCard>
 
       {/* Courses Table */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Course Code
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Course Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Department
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Credits
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Faculty
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Enrollments
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {paginatedCourses.map((course) => (
-                <tr key={course.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <span className="font-mono font-medium text-blue-600">{course.code}</span>
-                  </td>
-                  <td className="px-6 py-4 font-medium text-gray-900">{course.name}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{course.department}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{course.credits}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
-                    {getFacultyNames(course.facultyIds)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
-                      {course.enrollmentCount}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
-                    <Link
-                      href={`/courses/${course.id}`}
-                      className="text-blue-600 hover:text-blue-900"
-                    >
-                      View
-                    </Link>
-                    <Link
-                      href={`/courses/${course.id}/edit`}
-                      className="text-green-600 hover:text-green-900"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(course.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
-                  </td>
+      <AnimatedSection animation="slideUp" delay={0.2}>
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-slate-700">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 dark:bg-slate-700 border-b border-gray-200 dark:border-slate-700">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Course Code
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Course Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Department
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Credits
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Faculty
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Enrollments
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
+                {paginatedCourses.map((course) => (
+                  <tr key={course.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                    <td className="px-6 py-4">
+                      <span className="font-mono font-medium text-blue-600 dark:text-blue-400">{course.code}</span>
+                    </td>
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{course.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{course.department}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{course.credits}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400 max-w-xs truncate">
+                      {getFacultyNames(course.facultyIds)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
+                        {course.enrollmentCount}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
+                      <Link
+                        href={`/courses/${course.id}`}
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-900"
+                      >
+                        View
+                      </Link>
+                      <Link
+                        href={`/courses/${course.id}/edit`}
+                        className="text-green-600 dark:text-green-400 hover:text-green-900"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(course.id)}
+                        className="text-red-600 dark:text-red-400 hover:text-red-900"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
         </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t">
-            <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-            >
-              Previous
-            </button>
-            <span className="text-sm text-gray-700">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-            >
-              Next
-            </button>
-          </div>
-        )}
-      </div>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="bg-gray-50 dark:bg-slate-700 px-6 py-4 flex items-center justify-between border-t border-gray-200 dark:border-slate-700">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+              >
+                Previous
+              </button>
+              <span className="text-sm text-gray-700 dark:text-gray-300">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </div>
+      </AnimatedSection>
     </div>
   );
 }
