@@ -57,6 +57,7 @@ export default function Dashboard() {
     chart: {
       type: 'bar' as const,
       toolbar: { show: false },
+      zoom: { enabled: false },
       background: 'transparent',
     },
     theme: {
@@ -85,16 +86,23 @@ export default function Dashboard() {
       },
     },
     colors: ['#3B82F6'],
-    title: {
-      text: 'Course Enrollments',
-      align: 'left' as const,
-      style: {
-        color: '#f1f5f9',
-      },
-    },
     grid: {
       borderColor: '#334155',
     },
+    responsive: [
+      {
+        breakpoint: 640,
+        options: {
+          chart: { height: 220 },
+          xaxis: {
+            labels: {
+              rotate: -45,
+              style: { fontSize: '10px', colors: '#94a3b8' },
+            },
+          },
+        },
+      },
+    ],
   };
 
   const courseChartSeries = [
@@ -107,7 +115,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <AnimatedSection animation="fadeIn">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
         <p className="text-gray-600 dark:text-gray-400">Welcome to the Academic Management System</p>
       </AnimatedSection>
 
@@ -139,13 +147,17 @@ export default function Dashboard() {
       {/* Charts and Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Bar Chart */}
-        <AnimatedCard delay={0.4} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
-          <Chart
-            options={courseChartOptions}
-            series={courseChartSeries}
-            type="bar"
-            height={300}
-          />
+        <AnimatedCard delay={0.4} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-3 sm:p-6 border border-gray-200 dark:border-slate-700">
+          <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-2">📊 Course Enrollments</h2>
+          <div className="overflow-x-auto">
+            <Chart
+              options={courseChartOptions}
+              series={courseChartSeries}
+              type="bar"
+              height={280}
+              width="100%"
+            />
+          </div>
         </AnimatedCard>
 
         {/* Top Students Leaderboard */}

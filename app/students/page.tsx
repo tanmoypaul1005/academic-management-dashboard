@@ -212,7 +212,7 @@ export default function StudentsPage() {
       <AnimatedSection animation="fadeIn">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Students</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Students</h1>
             <p className="text-gray-600 dark:text-gray-400">Manage student information and enrollments</p>
           </div>
           <button

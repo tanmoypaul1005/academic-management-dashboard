@@ -73,7 +73,7 @@ export default function CourseDetailsPage() {
               <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 rounded-lg font-mono font-bold">
                 {course.code}
               </span>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{course.name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{course.name}</h1>
             </div>
             <p className="text-gray-600 dark:text-gray-400">{course.department}</p>
           </div>

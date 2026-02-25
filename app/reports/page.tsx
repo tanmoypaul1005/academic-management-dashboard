@@ -107,7 +107,8 @@ export default function ReportsPage() {
   const enrollmentChartOptions = {
     chart: {
       type: 'line' as const,
-      toolbar: { show: true },
+      toolbar: { show: false },
+      zoom: { enabled: false },
       background: 'transparent',
     },
     theme: {
@@ -116,8 +117,10 @@ export default function ReportsPage() {
     xaxis: {
       categories: courses.map(c => c.code),
       labels: {
+        rotate: -45,
         style: {
           colors: '#94a3b8',
+          fontSize: '11px',
         },
       },
     },
@@ -129,19 +132,26 @@ export default function ReportsPage() {
       },
     },
     colors: ['#3B82F6'],
-    title: {
-      text: 'Course Enrollments Over Time',
-      align: 'left' as const,
-      style: {
-        color: '#f1f5f9',
-      },
-    },
     stroke: {
       curve: 'smooth' as const,
     },
     grid: {
       borderColor: '#334155',
     },
+    responsive: [
+      {
+        breakpoint: 640,
+        options: {
+          chart: { height: 260 },
+          xaxis: {
+            labels: {
+              rotate: -60,
+              style: { fontSize: '9px', colors: '#94a3b8' },
+            },
+          },
+        },
+      },
+    ],
   };
 
   const enrollmentChartSeries = [
@@ -156,7 +166,8 @@ export default function ReportsPage() {
   const performanceChartOptions = {
     chart: {
       type: 'bar' as const,
-      toolbar: { show: true },
+      toolbar: { show: false },
+      zoom: { enabled: false },
       background: 'transparent',
     },
     theme: {
@@ -173,6 +184,7 @@ export default function ReportsPage() {
       labels: {
         style: {
           colors: '#94a3b8',
+          fontSize: '11px',
         },
       },
     },
@@ -180,20 +192,27 @@ export default function ReportsPage() {
       labels: {
         style: {
           colors: '#94a3b8',
+          fontSize: '11px',
         },
       },
     },
     colors: ['#10B981'],
-    title: {
-      text: 'Top 10 Courses by Average Grade',
-      align: 'left' as const,
-      style: {
-        color: '#f1f5f9',
-      },
-    },
     grid: {
       borderColor: '#334155',
     },
+    responsive: [
+      {
+        breakpoint: 640,
+        options: {
+          chart: { height: 260 },
+          yaxis: {
+            labels: {
+              style: { fontSize: '9px', colors: '#94a3b8' },
+            },
+          },
+        },
+      },
+    ],
   };
 
   const performanceChartSeries = [
@@ -207,7 +226,7 @@ export default function ReportsPage() {
     <div className="space-y-6">
       <AnimatedSection animation="fadeIn">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
           <p className="text-gray-600 dark:text-gray-400">View and export comprehensive academic reports</p>
         </div>
       </AnimatedSection>
@@ -216,22 +235,22 @@ export default function ReportsPage() {
       <AnimatedCard delay={0.1}>
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Export Reports</h2>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3">
             <button
               onClick={handleExportEnrollments}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+              className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors text-sm"
             >
               📊 Export Course Enrollments (CSV)
             </button>
             <button
               onClick={handleExportTopStudents}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors"
+              className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors text-sm"
             >
               🏆 Export Top Students (CSV)
             </button>
             <button
               onClick={handleExportGrades}
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 transition-colors"
+              className="w-full sm:w-auto px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 transition-colors text-sm"
             >
               📝 Export All Grades (CSV)
             </button>
@@ -267,24 +286,32 @@ export default function ReportsPage() {
             </nav>
           </div>
 
-          <div className="p-6">
+          <div className="p-3 sm:p-6">
             {selectedReport === 'enrollments' ? (
               <div>
-                <Chart
-                  options={enrollmentChartOptions}
-                  series={enrollmentChartSeries}
-                  type="line"
-                  height={400}
-                />
+                <h3 className="text-base font-semibold text-gray-900 dark:text-slate-200 mb-3">Course Enrollments Over Time</h3>
+                <div className="overflow-x-auto">
+                  <Chart
+                    options={enrollmentChartOptions}
+                    series={enrollmentChartSeries}
+                    type="line"
+                    height={350}
+                    width="100%"
+                  />
+                </div>
               </div>
             ) : (
               <div>
-                <Chart
-                  options={performanceChartOptions}
-                  series={performanceChartSeries}
-                  type="bar"
-                  height={400}
-                />
+                <h3 className="text-base font-semibold text-gray-900 dark:text-slate-200 mb-3">Top 10 Courses by Average Grade</h3>
+                <div className="overflow-x-auto">
+                  <Chart
+                    options={performanceChartOptions}
+                    series={performanceChartSeries}
+                    type="bar"
+                    height={350}
+                    width="100%"
+                  />
+                </div>
               </div>
             )}
           </div>
