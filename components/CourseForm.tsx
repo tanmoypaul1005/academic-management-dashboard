@@ -11,7 +11,8 @@ interface CourseFormProps {
   onSuccess?: (course?: Course) => void;
 }
 
-export default function CourseForm({ course, mode, onSuccess }: CourseFormProps) {
+export default function 
+CourseForm({ course, mode, onSuccess }: CourseFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [faculty, setFaculty] = useState<Faculty[]>([]);
@@ -24,6 +25,19 @@ export default function CourseForm({ course, mode, onSuccess }: CourseFormProps)
     semester: course?.semester || '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const departmentOptions = [
+    'Computer Science',
+    'Mathematics',
+    'Physics',
+    'Chemistry',
+    'Biology',
+    'English',
+    'Economics',
+    'Business',
+    'History',
+    'Psychology',
+  ];
 
   useEffect(() => {
     async function fetchFaculty() {
@@ -146,20 +160,23 @@ export default function CourseForm({ course, mode, onSuccess }: CourseFormProps)
             )}
           </div>
 
-          {/* Department */}
+          {/* Department (fixed select options) */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Department <span className="text-red-500 dark:text-red-400">*</span>
             </label>
-            <input
-              type="text"
+            <select
               value={formData.department}
               onChange={(e) => setFormData({ ...formData, department: e.target.value })}
               className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.department ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
-              placeholder="e.g., Computer Science"
-            />
+            >
+              <option value="">Select Department</option>
+              {departmentOptions.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
             {errors.department && (
               <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.department}</p>
             )}
