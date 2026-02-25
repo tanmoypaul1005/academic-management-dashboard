@@ -27,6 +27,8 @@ export default function StudentsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmTargetId, setConfirmTargetId] = useState<string | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editTarget, setEditTarget] = useState<Student | null>(null);
   const pageSize = 10;
 
   // Initial load: fetch full list once for filters and the first page
@@ -154,6 +156,17 @@ export default function StudentsPage() {
           setLoading(false);
         }
       })();
+    }
+  }
+
+  function handleEditSuccess(updated?: Student) {
+    setShowEditModal(false);
+    setEditTarget(null);
+    if (updated) {
+      // update in-memory list
+      setStudents(prev => prev.map(s => s.id === updated.id ? updated : s));
+      // update current page items
+      setPageStudents(prev => prev.map(s => s.id === updated.id ? updated : s));
     }
   }
 
@@ -358,12 +371,15 @@ export default function StudentsPage() {
                     >
                       View
                     </Link>
-                    <Link
-                      href={`/students/${student.id}/edit`}
+                    <button
+                      onClick={() => {
+                        setEditTarget(student);
+                        setShowEditModal(true);
+                      }}
                       className="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 transition-colors"
                     >
                       Edit
-                    </Link>
+                    </button>
                     <button
                       onClick={() => handleDeleteRequest(student.id)}
                       className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors"
@@ -392,6 +408,17 @@ export default function StudentsPage() {
         size="lg"
       >
         <StudentForm mode="create" onSuccess={handleAddSuccess} />
+      </CommonModal>
+      {/* Edit Student Modal */}
+      <CommonModal
+        isOpen={showEditModal}
+        onClose={() => { setShowEditModal(false); setEditTarget(null); }}
+        title="Edit Student"
+        size="lg"
+      >
+        {editTarget && (
+          <StudentForm student={editTarget} mode="edit" onSuccess={handleEditSuccess} />
+        )}
       </CommonModal>
       {/* Delete Confirm Modal */}
       <ConfirmModal
