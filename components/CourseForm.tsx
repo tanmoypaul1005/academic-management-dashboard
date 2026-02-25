@@ -101,79 +101,79 @@ export default function CourseForm({ course, mode }: CourseFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           {mode === 'create' ? 'Add New Course' : 'Edit Course'}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Course Name */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Course Name <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Course Name <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.name ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
               placeholder="e.g., Data Structures & Algorithms"
             />
             {errors.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.name}</p>
             )}
           </div>
 
           {/* Course Code */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Course Code <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Course Code <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <input
               type="text"
               value={formData.code}
               onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.code ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.code ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
               placeholder="e.g., CS301"
             />
             {errors.code && (
-              <p className="mt-1 text-sm text-red-500">{errors.code}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.code}</p>
             )}
           </div>
 
           {/* Department */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Department <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Department <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <input
               type="text"
               value={formData.department}
               onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.department ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.department ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
               placeholder="e.g., Computer Science"
             />
             {errors.department && (
-              <p className="mt-1 text-sm text-red-500">{errors.department}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.department}</p>
             )}
           </div>
 
           {/* Credits */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Credits <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Credits <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <select
               value={formData.credits}
               onChange={(e) => setFormData({ ...formData, credits: Number(e.target.value) })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.credits ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.credits ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
             >
               <option value={1}>1 Credit</option>
@@ -184,46 +184,46 @@ export default function CourseForm({ course, mode }: CourseFormProps) {
               <option value={6}>6 Credits</option>
             </select>
             {errors.credits && (
-              <p className="mt-1 text-sm text-red-500">{errors.credits}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.credits}</p>
             )}
           </div>
 
           {/* Semester */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Semester <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Semester <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <input
               type="text"
               value={formData.semester}
               onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.semester ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.semester ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
               placeholder="e.g., Fall 2025"
             />
             {errors.semester && (
-              <p className="mt-1 text-sm text-red-500">{errors.semester}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.semester}</p>
             )}
           </div>
         </div>
 
         {/* Assigned Faculty - Dynamic Multi-select */}
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Assigned Faculty <span className="text-red-500">*</span>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Assigned Faculty <span className="text-red-500 dark:text-red-400">*</span>
           </label>
-          <div className={`border rounded-lg p-4 max-h-60 overflow-y-auto ${
-            errors.facultyIds ? 'border-red-500' : 'border-gray-300'
+          <div className={`border rounded-lg p-4 max-h-60 overflow-y-auto bg-white dark:bg-slate-700 ${
+            errors.facultyIds ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
           }`}>
             {faculty.length === 0 ? (
-              <p className="text-gray-500 text-sm">No faculty members available</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">No faculty members available</p>
             ) : (
               <div className="space-y-2">
                 {faculty.map((member) => (
                   <label
                     key={member.id}
-                    className="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
+                    className="flex items-center p-2 hover:bg-gray-50 dark:hover:bg-slate-600/50 rounded cursor-pointer"
                   >
                     <input
                       type="checkbox"
@@ -232,9 +232,9 @@ export default function CourseForm({ course, mode }: CourseFormProps) {
                       className="mr-3 h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
                     />
                     <div className="flex-1">
-                      <span className="font-medium text-gray-900">{member.name}</span>
-                      <span className="text-gray-600"> - {member.title}</span>
-                      <p className="text-sm text-gray-500">{member.department}</p>
+                      <span className="font-medium text-gray-900 dark:text-white">{member.name}</span>
+                      <span className="text-gray-600 dark:text-gray-300"> - {member.title}</span>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{member.department}</p>
                     </div>
                   </label>
                 ))}
@@ -242,9 +242,9 @@ export default function CourseForm({ course, mode }: CourseFormProps) {
             )}
           </div>
           {errors.facultyIds && (
-            <p className="mt-1 text-sm text-red-500">{errors.facultyIds}</p>
+            <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.facultyIds}</p>
           )}
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {formData.facultyIds.length} faculty member(s) assigned
           </p>
         </div>
@@ -254,14 +254,14 @@ export default function CourseForm({ course, mode }: CourseFormProps) {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Saving...' : mode === 'create' ? 'Create Course' : 'Update Course'}
           </button>
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            className="px-6 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors"
           >
             Cancel
           </button>

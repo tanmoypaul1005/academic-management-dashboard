@@ -211,18 +211,18 @@ export default function StudentForm({ student, mode }: StudentFormProps) {
 
         {/* Enrolled Courses - Dynamic Multi-select */}
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Enrolled Courses
           </label>
-          <div className="border border-gray-300 rounded-lg p-4 max-h-60 overflow-y-auto">
+          <div className="border border-gray-300 dark:border-slate-600 rounded-lg p-4 max-h-60 overflow-y-auto bg-white dark:bg-slate-700">
             {courses.length === 0 ? (
-              <p className="text-gray-500 text-sm">No courses available</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">No courses available</p>
             ) : (
               <div className="space-y-2">
                 {courses.map((course) => (
                   <label
                     key={course.id}
-                    className="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
+                    className="flex items-center p-2 hover:bg-gray-50 dark:hover:bg-slate-600/50 rounded cursor-pointer"
                   >
                     <input
                       type="checkbox"
@@ -231,15 +231,15 @@ export default function StudentForm({ student, mode }: StudentFormProps) {
                       className="mr-3 h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
                     />
                     <div className="flex-1">
-                      <span className="font-medium text-gray-900">{course.code}</span>
-                      <span className="text-gray-600"> - {course.name}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{course.code}</span>
+                      <span className="text-gray-600 dark:text-gray-300"> - {course.name}</span>
                     </div>
                   </label>
                 ))}
               </div>
             )}
           </div>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {formData.enrolledCourses.length} course(s) selected
           </p>
         </div>
@@ -249,14 +249,14 @@ export default function StudentForm({ student, mode }: StudentFormProps) {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Saving...' : mode === 'create' ? 'Create Student' : 'Update Student'}
           </button>
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            className="px-6 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors"
           >
             Cancel
           </button>

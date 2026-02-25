@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { studentsApi } from '@/lib/api';
 import { Student } from '@/types';
 import StudentForm from '@/components/StudentForm';
+import AnimatedSection from '@/components/AnimatedSection';
 
 export default function EditStudentPage() {
   const params = useParams();
@@ -29,7 +30,7 @@ export default function EditStudentPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
       </div>
     );
   }
@@ -37,14 +38,14 @@ export default function EditStudentPage() {
   if (!student) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900">Student Not Found</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Student Not Found</h2>
       </div>
     );
   }
 
   return (
-    <div>
+    <AnimatedSection>
       <StudentForm student={student} mode="edit" />
-    </div>
+    </AnimatedSection>
   );
 }

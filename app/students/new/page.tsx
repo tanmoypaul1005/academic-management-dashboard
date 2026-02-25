@@ -1,11 +1,12 @@
 'use client';
 
 import StudentForm from '@/components/StudentForm';
+import AnimatedSection from '@/components/AnimatedSection';
 
 export default function NewStudentPage() {
   return (
-    <div>
+    <AnimatedSection>
       <StudentForm mode="create" />
-    </div>
+    </AnimatedSection>
   );
 }
