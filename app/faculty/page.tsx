@@ -95,8 +95,19 @@ export default function FacultyPage() {
     }
 
     try {
-      await gradesApi.create(gradeForm as GradeFormData);
-      alert('Grade added successfully!');
+      // Check if a grade already exists for this student + course
+      const existing = await gradesApi.getByStudentId(gradeForm.studentId);
+      const duplicate = existing.find(g => g.courseId === gradeForm.courseId);
+
+      if (duplicate) {
+        // Update existing grade instead of creating a duplicate
+        await gradesApi.update(duplicate.id, gradeForm as GradeFormData);
+        alert('Grade updated successfully!');
+      } else {
+        await gradesApi.create(gradeForm as GradeFormData);
+        alert('Grade added successfully!');
+      }
+
       setGradeForm({
         studentId: '',
         courseId: '',
@@ -105,8 +116,8 @@ export default function FacultyPage() {
         semester: 'Fall 2025',
       });
     } catch (error) {
-      console.error('Error adding grade:', error);
-      alert('Failed to add grade');
+      console.error('Error saving grade:', error);
+      alert('Failed to save grade');
     }
   }
 
