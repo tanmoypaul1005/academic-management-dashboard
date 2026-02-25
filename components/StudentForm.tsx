@@ -8,9 +8,10 @@ import { studentsApi, coursesApi } from '@/lib/api';
 interface StudentFormProps {
   student?: Student;
   mode: 'create' | 'edit';
+  onSuccess?: () => void;
 }
 
-export default function StudentForm({ student, mode }: StudentFormProps) {
+export default function StudentForm({ student, mode, onSuccess }: StudentFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -79,7 +80,12 @@ export default function StudentForm({ student, mode }: StudentFormProps) {
       } else if (student) {
         await studentsApi.update(student.id, formData);
       }
-      router.push('/students');
+      
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push('/students');
+      }
     } catch (error) {
       console.error('Error saving student:', error);
       alert('Failed to save student');

@@ -7,6 +7,8 @@ import { Course, Faculty } from '@/types';
 import { filterCourses, paginate, getUniqueDepartments } from '@/lib/utils';
 import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
+import CommonModal from '@/components/CommonModal';
+import CourseForm from '@/components/CourseForm';
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -15,6 +17,7 @@ export default function CoursesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showAddModal, setShowAddModal] = useState(false);
   const pageSize = 10;
 
   useEffect(() => {
@@ -48,6 +51,11 @@ export default function CoursesPage() {
     }
   }
 
+  function handleAddSuccess() {
+    setShowAddModal(false);
+    fetchData();
+  }
+
   const filteredCourses = filterCourses(courses, searchTerm, selectedDepartment);
   const paginatedCourses = paginate(filteredCourses, currentPage, pageSize);
   const totalPages = Math.ceil(filteredCourses.length / pageSize);
@@ -75,12 +83,12 @@ export default function CoursesPage() {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Courses</h1>
             <p className="text-gray-600 dark:text-gray-400">Manage courses and faculty assignments</p>
           </div>
-          <Link
-            href="/courses/new"
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
           >
             + Add Course
-          </Link>
+          </button>
         </div>
       </AnimatedSection>
 
@@ -228,6 +236,16 @@ export default function CoursesPage() {
           )}
         </div>
       </AnimatedSection>
+
+      {/* Add Course Modal */}
+      <CommonModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="Add New Course"
+        size="lg"
+      >
+        <CourseForm mode="create" onSuccess={handleAddSuccess} />
+      </CommonModal>
     </div>
   );
 }

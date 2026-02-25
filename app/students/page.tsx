@@ -7,6 +7,8 @@ import { Student, Course } from '@/types';
 import { filterStudents, paginate, getUniqueMajors, getUniqueYears } from '@/lib/utils';
 import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
+import CommonModal from '@/components/CommonModal';
+import StudentForm from '@/components/StudentForm';
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -17,7 +19,7 @@ export default function StudentsPage() {
   const [selectedMajor, setSelectedMajor] = useState<string>('');
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [showForm, setShowForm] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const pageSize = 10;
 
   useEffect(() => {
@@ -51,6 +53,11 @@ export default function StudentsPage() {
     }
   }
 
+  function handleAddSuccess() {
+    setShowAddModal(false);
+    fetchData();
+  }
+
   const filteredStudents = filterStudents(students, searchTerm, {
     course: selectedCourse,
     year: selectedYear,
@@ -79,12 +86,12 @@ export default function StudentsPage() {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Students</h1>
             <p className="text-gray-600 dark:text-gray-400">Manage student information and enrollments</p>
           </div>
-          <Link
-            href="/students/new"
+          <button
+            onClick={() => setShowAddModal(true)}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
           >
             + Add Student
-          </Link>
+          </button>
         </div>
       </AnimatedSection>
 
@@ -273,6 +280,16 @@ export default function StudentsPage() {
         )}
         </div>
       </AnimatedSection>
+
+      {/* Add Student Modal */}
+      <CommonModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="Add New Student"
+        size="lg"
+      >
+        <StudentForm mode="create" onSuccess={handleAddSuccess} />
+      </CommonModal>
     </div>
   );
 }
