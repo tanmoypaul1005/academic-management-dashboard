@@ -6,11 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "json-server": "json-server --watch db.json --port 3001"
   },
   "dependencies": {
+    "apexcharts": "^5.6.0",
+    "axios": "^1.13.5",
+    "json-server": "^1.0.0-beta.9",
     "next": "16.1.6",
     "react": "19.2.3",
+    "react-apexcharts": "^2.0.1",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
