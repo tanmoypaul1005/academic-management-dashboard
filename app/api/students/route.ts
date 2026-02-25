@@ -1,5 +1,5 @@
 import { Student } from '@/types';
-import { students } from '../data';
+import { students, saveData } from '../data';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -22,5 +22,6 @@ export async function POST(request: Request) {
     id: Date.now().toString(),
   };
   students.push(newStudent);
+  saveData();
   return Response.json(newStudent, { status: 201 });
 }

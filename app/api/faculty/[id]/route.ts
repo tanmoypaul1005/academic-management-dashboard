@@ -3,9 +3,10 @@ import { Faculty } from '@/types';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const member = faculty.find((f: Faculty) => f.id === params.id);
+  const { id } = await params;
+  const member = faculty.find((f: Faculty) => f.id === id);
   if (!member) {
     return Response.json({ error: 'Faculty not found' }, { status: 404 });
   }
@@ -14,10 +15,11 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const data = await request.json();
-  const index = faculty.findIndex((f: Faculty) => f.id === params.id);
+  const index = faculty.findIndex((f: Faculty) => f.id === id);
   
   if (index === -1) {
     return Response.json({ error: 'Faculty not found' }, { status: 404 });
@@ -29,9 +31,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const index = faculty.findIndex((f: Faculty) => f.id === params.id);
+  const { id } = await params;
+  const index = faculty.findIndex((f: Faculty) => f.id === id);
   
   if (index === -1) {
     return Response.json({ error: 'Faculty not found' }, { status: 404 });

@@ -1,5 +1,5 @@
 import { Course } from '@/types';
-import { courses } from '../data';
+import { courses, saveData } from '../data';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -23,5 +23,6 @@ export async function POST(request: Request) {
     enrollmentCount: 0,
   };
   courses.push(newCourse);
+  saveData();
   return Response.json(newCourse, { status: 201 });
 }
