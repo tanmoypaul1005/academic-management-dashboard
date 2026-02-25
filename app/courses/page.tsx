@@ -302,7 +302,10 @@ export default function CoursesPage() {
                                                 View
                                             </Link>
                                             <button
-                                                onClick={() => { setEditTarget(course); setShowEditModal(true); }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); 
+                                                    setEditTarget(course); 
+                                                    setShowEditModal(true); }}
                                                 className="text-green-600 dark:text-green-400"
                                             >
                                                 Edit

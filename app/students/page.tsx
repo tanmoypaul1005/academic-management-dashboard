@@ -373,7 +373,8 @@ export default function StudentsPage() {
                                                 View
                                             </Link>
                                             <button
-                                                onClick={() => {
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); 
                                                     setEditTarget(student);
                                                     setShowEditModal(true);
                                                 }}
