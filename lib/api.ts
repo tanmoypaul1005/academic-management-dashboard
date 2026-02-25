@@ -23,7 +23,11 @@ const api = axios.create({
 export const studentsApi = {
   getAll: async (): Promise<Student[]> => {
     const response = await api.get('/students');
-    return response.data;
+    const payload = response.data;
+    // Handle paginated or plain responses
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray(payload.data)) return payload.data;
+    return [];
   },
   getById: async (id: string): Promise<Student> => {
     const response = await api.get(`/students/${id}`);
@@ -43,13 +47,21 @@ export const studentsApi = {
   delete: async (id: string): Promise<void> => {
     await api.delete(`/students/${id}`);
   },
+  // Fetch a paginated page (returns full payload with metadata)
+  getPage: async (page = 1, limit = 10): Promise<{ data: Student[]; total: number; page: number; limit: number; totalPages: number }> => {
+    const response = await api.get(`/students?page=${page}&limit=${limit}`);
+    return response.data;
+  },
 };
 
 // Courses API
 export const coursesApi = {
   getAll: async (): Promise<Course[]> => {
     const response = await api.get('/courses');
-    return response.data;
+    const payload = response.data;
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray(payload.data)) return payload.data;
+    return [];
   },
   getById: async (id: string): Promise<Course> => {
     const response = await api.get(`/courses/${id}`);
@@ -69,6 +81,11 @@ export const coursesApi = {
   },
   delete: async (id: string): Promise<void> => {
     await api.delete(`/courses/${id}`);
+  },
+  // Fetch paginated courses with metadata
+  getPage: async (page = 1, limit = 10): Promise<{ data: Course[]; total: number; page: number; limit: number; totalPages: number }> => {
+    const response = await api.get(`/courses?page=${page}&limit=${limit}`);
+    return response.data;
   },
 };
 

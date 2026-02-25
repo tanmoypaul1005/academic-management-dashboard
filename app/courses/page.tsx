@@ -17,6 +17,9 @@ export default function CoursesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageCourses, setPageCourses] = useState<Course[]>([]);
+  const [totalCourses, setTotalCourses] = useState(0);
+  const [totalPagesServer, setTotalPagesServer] = useState(1);
   const [showAddModal, setShowAddModal] = useState(false);
   const pageSize = 10;
 
@@ -44,7 +47,21 @@ export default function CoursesPage() {
     
     try {
       await coursesApi.delete(id);
-      setCourses(courses.filter(c => c.id !== id));
+      const updated = courses.filter(c => c.id !== id);
+      setCourses(updated);
+      // reload current page respecting filters
+      const hasFilters = !!(searchTerm || selectedDepartment);
+      if (hasFilters) {
+        const filtered = filterCourses(updated, searchTerm, selectedDepartment);
+        setPageCourses(paginate(filtered, currentPage, pageSize));
+        setTotalCourses(filtered.length);
+        setTotalPagesServer(Math.max(1, Math.ceil(filtered.length / pageSize)));
+      } else {
+        const payload = await coursesApi.getPage(currentPage, pageSize);
+        setPageCourses(payload.data || []);
+        setTotalCourses(payload.total || 0);
+        setTotalPagesServer(payload.totalPages || 1);
+      }
     } catch (error) {
       console.error('Error deleting course:', error);
       alert('Failed to delete course');
@@ -53,13 +70,59 @@ export default function CoursesPage() {
 
   function handleAddSuccess() {
     setShowAddModal(false);
-    fetchData();
+    // Refresh full list (for filters) and reload page 1
+    (async () => {
+      setLoading(true);
+      try {
+        const all = await coursesApi.getAll();
+        setCourses(all);
+        setCurrentPage(1);
+      } catch (e) {
+        console.error('Error refreshing after add:', e);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }
 
+  // Fetch page data (server-side) or compute client-side when filters/search active
+  useEffect(() => {
+    let mounted = true;
+    async function loadPage() {
+      setLoading(true);
+      try {
+        const hasFilters = !!(searchTerm || selectedDepartment);
+        if (hasFilters) {
+          const filtered = filterCourses(courses, searchTerm, selectedDepartment);
+          const paged = paginate(filtered, currentPage, pageSize);
+          if (!mounted) return;
+          setPageCourses(paged);
+          setTotalCourses(filtered.length);
+          setTotalPagesServer(Math.max(1, Math.ceil(filtered.length / pageSize)));
+        } else {
+          const payload = await coursesApi.getPage(currentPage, pageSize);
+          if (!mounted) return;
+          setPageCourses(payload.data || []);
+          setTotalCourses(payload.total || 0);
+          setTotalPagesServer(payload.totalPages || 1);
+        }
+      } catch (error) {
+        console.error('Error loading courses page:', error);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    loadPage();
+    return () => {
+      mounted = false;
+    };
+  }, [currentPage, searchTerm, selectedDepartment]);
+
   const filteredCourses = filterCourses(courses, searchTerm, selectedDepartment);
-  const paginatedCourses = paginate(filteredCourses, currentPage, pageSize);
-  const totalPages = Math.ceil(filteredCourses.length / pageSize);
   const uniqueDepartments = getUniqueDepartments(courses);
+  const paginatedCourses = pageCourses;
+  const totalPages = totalPagesServer;
+ 
 
   function getFacultyNames(facultyIds: string[]): string {
     return facultyIds

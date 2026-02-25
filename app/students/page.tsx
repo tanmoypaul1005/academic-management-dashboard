@@ -19,34 +19,97 @@ export default function StudentsPage() {
   const [selectedMajor, setSelectedMajor] = useState<string>('');
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageStudents, setPageStudents] = useState<Student[]>([]);
+  const [totalStudents, setTotalStudents] = useState(0);
+  const [totalPagesServer, setTotalPagesServer] = useState(1);
   const [showAddModal, setShowAddModal] = useState(false);
   const pageSize = 10;
 
+  // Initial load: fetch full list once for filters and the first page
   useEffect(() => {
-    fetchData();
+    let mounted = true;
+    async function init() {
+      setLoading(true);
+      try {
+        const [allStudents, coursesData] = await Promise.all([
+          studentsApi.getAll(),
+          coursesApi.getAll(),
+        ]);
+        if (!mounted) return;
+        setStudents(allStudents);
+        setCourses(coursesData);
+      } catch (error) {
+        console.error('Error fetching initial data:', error);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    init();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  async function fetchData() {
-    try {
-      const [studentsData, coursesData] = await Promise.all([
-        studentsApi.getAll(),
-        coursesApi.getAll(),
-      ]);
-      setStudents(studentsData);
-      setCourses(coursesData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
+  // Fetch page data (server-side) or compute client-side when filters/search active
+  useEffect(() => {
+    let mounted = true;
+    async function loadPage() {
+      setLoading(true);
+      try {
+        const hasFilters = !!(searchTerm || selectedYear || selectedMajor || selectedCourse);
+        if (hasFilters) {
+          // Client-side filter+paginate using the full students list
+          const filtered = filterStudents(students, searchTerm, {
+            course: selectedCourse,
+            year: selectedYear,
+            major: selectedMajor,
+          });
+          const paged = paginate(filtered, currentPage, pageSize);
+          if (!mounted) return;
+          setPageStudents(paged);
+          setTotalStudents(filtered.length);
+          setTotalPagesServer(Math.max(1, Math.ceil(filtered.length / pageSize)));
+        } else {
+          // Server-side paginated fetch
+          const payload = await studentsApi.getPage(currentPage, pageSize);
+          if (!mounted) return;
+          setPageStudents(payload.data || []);
+          setTotalStudents(payload.total || 0);
+          setTotalPagesServer(payload.totalPages || 1);
+        }
+      } catch (error) {
+        console.error('Error loading students page:', error);
+      } finally {
+        if (mounted) setLoading(false);
+      }
     }
-  }
+    loadPage();
+    return () => {
+      mounted = false;
+    };
+  }, [currentPage, searchTerm, selectedYear, selectedMajor, selectedCourse]);
 
   async function handleDelete(id: string) {
     if (!confirm('Are you sure you want to delete this student?')) return;
     
     try {
       await studentsApi.delete(id);
-      setStudents(students.filter(s => s.id !== id));
+      // Refresh current page after delete
+      const updated = students.filter(s => s.id !== id);
+      setStudents(updated);
+      // reload current page (respect filters)
+      const hasFilters = !!(searchTerm || selectedYear || selectedMajor || selectedCourse);
+      if (hasFilters) {
+        const filtered = filterStudents(updated, searchTerm, { course: selectedCourse, year: selectedYear, major: selectedMajor });
+        setPageStudents(paginate(filtered, currentPage, pageSize));
+        setTotalStudents(filtered.length);
+        setTotalPagesServer(Math.max(1, Math.ceil(filtered.length / pageSize)));
+      } else {
+        const payload = await studentsApi.getPage(currentPage, pageSize);
+        setPageStudents(payload.data || []);
+        setTotalStudents(payload.total || 0);
+        setTotalPagesServer(payload.totalPages || 1);
+      }
     } catch (error) {
       console.error('Error deleting student:', error);
       alert('Failed to delete student');
@@ -55,7 +118,19 @@ export default function StudentsPage() {
 
   function handleAddSuccess() {
     setShowAddModal(false);
-    fetchData();
+    // Refresh full list (for filters) and reload page 1
+    (async () => {
+      setLoading(true);
+      try {
+        const all = await studentsApi.getAll();
+        setStudents(all);
+        setCurrentPage(1);
+      } catch (e) {
+        console.error('Error refreshing after add:', e);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }
 
   const filteredStudents = filterStudents(students, searchTerm, {
@@ -63,12 +138,12 @@ export default function StudentsPage() {
     year: selectedYear,
     major: selectedMajor,
   });
-
-  const paginatedStudents = paginate(filteredStudents, currentPage, pageSize);
-  const totalPages = Math.ceil(filteredStudents.length / pageSize);
-
   const uniqueMajors = getUniqueMajors(students);
   const uniqueYears = getUniqueYears(students);
+
+  // Use server-side page when available, otherwise client-side filtered page
+  const paginatedStudents = pageStudents;
+  const totalPages = totalPagesServer;
 
   if (loading) {
     return (
@@ -180,7 +255,7 @@ export default function StudentsPage() {
 
         {/* Results count */}
         <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-          Showing {filteredStudents.length} of {students.length} students
+          Showing {paginatedStudents.length} of {totalStudents} students
         </div>
       </AnimatedCard>
 
