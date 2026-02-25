@@ -14,6 +14,14 @@ import { ArrowLeft, Pencil, Trash2, Plus, X } from 'lucide-react';
 
 const GRADE_OPTIONS = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
 
+const SEMESTER_OPTIONS = [
+    'Fall 2026', 'Summer 2026', 'Spring 2026',
+    'Fall 2025', 'Summer 2025', 'Spring 2025',
+    'Fall 2024', 'Summer 2024', 'Spring 2024',
+    'Fall 2023', 'Summer 2023', 'Spring 2023',
+    'Fall 2022', 'Summer 2022', 'Spring 2022',
+];
+
 const emptyGradeForm = (): GradeFormData => ({
   studentId: '',
   courseId: '',
@@ -338,15 +346,17 @@ export default function StudentProfilePage() {
                         </CommonSelect>
 
                         {/* Semester */}
-                        <CommonInput
+                        <CommonSelect
                             label="Semester"
                             required
-                            type="text"
-                            placeholder="e.g., Fall 2025"
                             value={gradeForm.semester}
                             onChange={(e) => setGradeForm({ ...gradeForm, semester: e.target.value })}
-                            error={gradeErrors.semester}
-                        />
+                            >
+                            <option value="">Select Semester</option>
+                            {SEMESTER_OPTIONS.map(s => (
+                                <option key={s} value={s}>{s}</option>
+                            ))}
+                        </CommonSelect>
 
                         {/* Letter Grade */}
                         <CommonSelect

@@ -5,6 +5,7 @@ import { studentsApi, coursesApi, gradesApi } from '@/lib/api';
 import { Student, Course, GradeFormData } from '@/types';
 import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
+import CommonSelect from '@/components/CommonSelect';
 
 export default function FacultyPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -24,6 +25,24 @@ export default function FacultyPage() {
     numericGrade: 0,
     semester: 'Fall 2025',
   });
+
+  const SEMESTER_OPTIONS = [
+    'Fall 2026',
+    'Summer 2026',
+    'Spring 2026',
+    'Fall 2025',
+    'Summer 2025',
+    'Spring 2025',
+    'Fall 2024',
+    'Summer 2024',
+    'Spring 2024',
+    'Fall 2023',
+    'Summer 2023',
+    'Spring 2023',
+    'Fall 2022',
+    'Summer 2022',
+    'Spring 2022',
+  ];
 
   // Bulk operations
   const [bulkAction, setBulkAction] = useState<'enroll' | 'unenroll'>('enroll');
@@ -364,17 +383,17 @@ export default function FacultyPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Semester <span className="text-red-500 dark:text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
+                    <CommonSelect
+                      label="Semester"
+                      required
                       value={gradeForm.semester}
                       onChange={(e) => setGradeForm({ ...gradeForm, semester: e.target.value })}
-                      className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
-                      placeholder="e.g., Fall 2025"
-                      required
-                    />
+                    >
+                      <option value="">Select Semester</option>
+                      {SEMESTER_OPTIONS.map(s => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </CommonSelect>
                   </div>
                 </div>
 
