@@ -12,6 +12,7 @@ import CourseForm from '@/components/CourseForm';
 import Pagination from '@/components/Pagination';
 import CourseEditModal from '@/components/CourseEditModal';
 import ConfirmModal from '@/components/ConfirmModal';
+import { useRouter } from 'next/navigation';
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -29,6 +30,8 @@ export default function CoursesPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmTargetId, setConfirmTargetId] = useState<string | null>(null);
   const pageSize = 10;
+
+  const router = useRouter();
 
   useEffect(() => {
     fetchData();
@@ -272,9 +275,11 @@ export default function CoursesPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
+              <tbody className="divide-y divide-gray-200 dark:divide-slate-700 ">
                 {paginatedCourses.map((course) => (
-                  <tr key={course.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                  <tr onClick={()=>{
+                router.push(`/courses/${course.id}`)
+              }}  key={course.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 cursor-pointer">
                     <td className="px-6 py-4">
                       <span className="font-mono font-medium text-blue-600 dark:text-blue-400">{course.code}</span>
                     </td>
@@ -292,7 +297,7 @@ export default function CoursesPage() {
                     <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
                       <Link
                         href={`/courses/${course.id}`}
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-900"
+                        className="text-blue-600 dark:text-blue-400"
                       >
                         View
                       </Link>
