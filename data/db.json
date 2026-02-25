@@ -1,6 +1,19 @@
 {
   "students": [
     {
+      "id": "1",
+      "name": "Alice Johnson",
+      "email": "alice.johnson@university.edu",
+      "gpa": 3.95,
+      "year": 3,
+      "major": "Computer Science",
+      "enrolledCourses": [
+        "1",
+        "2",
+        "5"
+      ]
+    },
+    {
       "id": "2",
       "name": "Bob Smith",
       "email": "bob.smith@university.edu",
@@ -200,6 +213,29 @@
         "2",
         "5"
       ]
+    },
+    {
+      "id": "19",
+      "name": "Samir Khan",
+      "email": "samir.khan@university.edu",
+      "gpa": 3.66,
+      "year": 1,
+      "major": "Physics",
+      "enrolledCourses": [
+        "3"
+      ]
+    },
+    {
+      "id": "20",
+      "name": "Tara O'Neill",
+      "email": "tara.oneill@university.edu",
+      "gpa": 3.81,
+      "year": 2,
+      "major": "Computer Science",
+      "enrolledCourses": [
+        "1",
+        "5"
+      ]
     }
   ],
   "courses": [
@@ -218,7 +254,7 @@
     },
     {
       "id": "2",
-      "name": "Linear Algebra",
+      "name": "Linear Algebra 9999",
       "code": "MATH201",
       "department": "Mathematics",
       "credits": 3,

@@ -379,12 +379,7 @@ export default function StudentsPage() {
                     >
                       Edit
                     </button>
-                    <button
-                      onClick={() => handleDeleteRequest(student.id)}
-                      className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors"
-                    >
-                      Delete
-                    </button>
+                    
                   </td>
                 </tr>
               ))}

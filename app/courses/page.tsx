@@ -306,12 +306,7 @@ export default function CoursesPage() {
                       >
                         Edit
                       </button>
-                      <button
-                        onClick={() => handleDeleteRequest(course.id)}
-                        className="text-red-600 dark:text-red-400 hover:text-red-900"
-                      >
-                        Delete
-                      </button>
+                
                     </td>
                   </tr>
                 ))}
