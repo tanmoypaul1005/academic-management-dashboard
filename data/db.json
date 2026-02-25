@@ -16,7 +16,7 @@
     },
     {
       "id": "2",
-      "name": "Bob Smith",
+      "name": "Bob Smith ",
       "email": "bob.smith@university.edu",
       "gpa": 3.87,
       "year": 2,
@@ -519,7 +519,7 @@
       "id": "1",
       "studentId": "1",
       "courseId": "1",
-      "grade": "B+",
+      "grade": "A-",
       "numericGrade": 80,
       "semester": "Fall 2025"
     },

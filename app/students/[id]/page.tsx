@@ -64,6 +64,23 @@ export default function StudentProfilePage() {
             }
         }
         fetchData();
+            // Listen for cross-page data updates (e.g., grades added/updated elsewhere)
+            const onDbUpdated = (ev: Event) => {
+                try {
+                    const detail = (ev as CustomEvent)?.detail;
+                    // If no type provided or type === 'grades', re-fetch grades for this student
+                    if (!detail || detail.type === 'grades') {
+                        gradesApi.getByStudentId(studentId).then(setGrades).catch(console.error);
+                    }
+                } catch (err) {
+                    console.error('onDbUpdated handler error', err);
+                }
+            };
+            window.addEventListener('app:db-updated', onDbUpdated as EventListener);
+
+            return () => {
+                window.removeEventListener('app:db-updated', onDbUpdated as EventListener);
+            };
     }, [studentId]);
 
     if (loading) {
