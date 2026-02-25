@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Student, Course, StudentFormData } from '@/types';
 import { studentsApi, coursesApi } from '@/lib/api';
+import CommonInput from './CommonInput';
+import CommonSelect from './CommonSelect';
 
 interface StudentFormProps {
   student?: Student;
@@ -108,72 +110,51 @@ export default function StudentForm({ student, mode, onSuccess }: StudentFormPro
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Full Name <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <input
+            <CommonInput
+              label="Full Name"
+              required
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.name ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
               placeholder="Enter student name"
+              error={errors.name}
             />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.name}</p>
-            )}
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Email <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <input
+            <CommonInput
+              label="Email"
+              required
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.email ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
               placeholder="student@university.edu"
+              error={errors.email}
             />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.email}</p>
-            )}
           </div>
 
           {/* Major */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Major <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <input
+            <CommonInput
+              label="Major"
+              required
               type="text"
               value={formData.major}
               onChange={(e) => setFormData({ ...formData, major: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.major ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
               placeholder="e.g., Computer Science"
+              error={errors.major}
             />
-            {errors.major && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.major}</p>
-            )}
           </div>
 
           {/* Year */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Year <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <select
+            <CommonSelect
+              label="Year"
+              required
               value={formData.year}
               onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.year ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
+              error={errors.year}
             >
               <option value={1}>Year 1</option>
               <option value={2}>Year 2</option>
@@ -181,32 +162,23 @@ export default function StudentForm({ student, mode, onSuccess }: StudentFormPro
               <option value={4}>Year 4</option>
               <option value={5}>Year 5</option>
               <option value={6}>Year 6</option>
-            </select>
-            {errors.year && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.year}</p>
-            )}
+            </CommonSelect>
           </div>
 
           {/* GPA */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              GPA <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <input
+            <CommonInput
+              label="GPA"
+              required
               type="number"
               step="0.01"
               min="0"
               max="4"
               value={formData.gpa}
               onChange={(e) => setFormData({ ...formData, gpa: parseFloat(e.target.value) })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.gpa ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
               placeholder="0.00 - 4.00"
+              error={errors.gpa}
             />
-            {errors.gpa && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.gpa}</p>
-            )}
           </div>
         </div>
 

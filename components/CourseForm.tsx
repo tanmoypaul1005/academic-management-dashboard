@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Course, Faculty, CourseFormData } from '@/types';
 import { coursesApi, facultyApi } from '@/lib/api';
+import CommonInput from './CommonInput';
+import CommonSelect from './CommonSelect';
 
 interface CourseFormProps {
   course?: Course;
@@ -124,75 +126,54 @@ CourseForm({ course, mode, onSuccess }: CourseFormProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Course Name */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Course Name <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <input
+            <CommonInput
+              label="Course Name"
+              required
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.name ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
               placeholder="e.g., Data Structures & Algorithms"
+              error={errors.name}
             />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.name}</p>
-            )}
           </div>
 
           {/* Course Code */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Course Code <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <input
+            <CommonInput
+              label="Course Code"
+              required
               type="text"
               value={formData.code}
               onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.code ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
               placeholder="e.g., CS301"
+              error={errors.code}
             />
-            {errors.code && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.code}</p>
-            )}
           </div>
 
-          {/* Department (fixed select options) */}
+          {/* Department */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Department <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <select
+            <CommonSelect
+              label="Department"
+              required
               value={formData.department}
               onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.department ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
+              error={errors.department}
             >
               <option value="">Select Department</option>
               {departmentOptions.map((d) => (
                 <option key={d} value={d}>{d}</option>
               ))}
-            </select>
-            {errors.department && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.department}</p>
-            )}
+            </CommonSelect>
           </div>
 
           {/* Credits */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Credits <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <select
+            <CommonSelect
+              label="Credits"
+              required
               value={formData.credits}
               onChange={(e) => setFormData({ ...formData, credits: Number(e.target.value) })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.credits ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
+              error={errors.credits}
             >
               <option value={1}>1 Credit</option>
               <option value={2}>2 Credits</option>
@@ -200,29 +181,20 @@ CourseForm({ course, mode, onSuccess }: CourseFormProps) {
               <option value={4}>4 Credits</option>
               <option value={5}>5 Credits</option>
               <option value={6}>6 Credits</option>
-            </select>
-            {errors.credits && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.credits}</p>
-            )}
+            </CommonSelect>
           </div>
 
           {/* Semester */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Semester <span className="text-red-500 dark:text-red-400">*</span>
-            </label>
-            <input
+            <CommonInput
+              label="Semester"
+              required
               type="text"
               value={formData.semester}
               onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.semester ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
-              }`}
               placeholder="e.g., Fall 2025"
+              error={errors.semester}
             />
-            {errors.semester && (
-              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.semester}</p>
-            )}
           </div>
         </div>
 
