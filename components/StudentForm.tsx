@@ -99,79 +99,79 @@ export default function StudentForm({ student, mode }: StudentFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           {mode === 'create' ? 'Add New Student' : 'Edit Student'}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Full Name <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.name ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
               placeholder="Enter student name"
             />
             {errors.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.name}</p>
             )}
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Email <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.email ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
               placeholder="student@university.edu"
             />
             {errors.email && (
-              <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.email}</p>
             )}
           </div>
 
           {/* Major */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Major <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Major <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <input
               type="text"
               value={formData.major}
               onChange={(e) => setFormData({ ...formData, major: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.major ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.major ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
               placeholder="e.g., Computer Science"
             />
             {errors.major && (
-              <p className="mt-1 text-sm text-red-500">{errors.major}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.major}</p>
             )}
           </div>
 
           {/* Year */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Year <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Year <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <select
               value={formData.year}
               onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.year ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.year ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
             >
               <option value={1}>Year 1</option>
@@ -182,14 +182,14 @@ export default function StudentForm({ student, mode }: StudentFormProps) {
               <option value={6}>Year 6</option>
             </select>
             {errors.year && (
-              <p className="mt-1 text-sm text-red-500">{errors.year}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.year}</p>
             )}
           </div>
 
           {/* GPA */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              GPA <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              GPA <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <input
               type="number"
@@ -198,13 +198,13 @@ export default function StudentForm({ student, mode }: StudentFormProps) {
               max="4"
               value={formData.gpa}
               onChange={(e) => setFormData({ ...formData, gpa: parseFloat(e.target.value) })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.gpa ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.gpa ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'
               }`}
               placeholder="0.00 - 4.00"
             />
             {errors.gpa && (
-              <p className="mt-1 text-sm text-red-500">{errors.gpa}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.gpa}</p>
             )}
           </div>
         </div>
