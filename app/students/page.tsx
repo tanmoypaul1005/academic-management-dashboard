@@ -125,7 +125,6 @@ export default function StudentsPage() {
       }
     } catch (error) {
       console.error('Error deleting student:', error);
-      alert('Failed to delete student');
     }
   }
 
