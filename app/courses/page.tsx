@@ -49,10 +49,6 @@ export default function CoursesPage() {
     }
   }
 
-  function handleDeleteRequest(id: string) {
-    setConfirmTargetId(id);
-    setShowConfirm(true);
-  }
 
   async function handleConfirmDelete() {
     if (!confirmTargetId) return;

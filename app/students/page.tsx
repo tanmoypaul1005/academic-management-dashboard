@@ -95,10 +95,6 @@ export default function StudentsPage() {
     };
   }, [currentPage, searchTerm, selectedYear, selectedMajor, selectedCourse]);
 
-  function handleDeleteRequest(id: string) {
-    setConfirmTargetId(id);
-    setShowConfirm(true);
-  }
 
   async function handleConfirmDelete() {
     if (!confirmTargetId) return;
