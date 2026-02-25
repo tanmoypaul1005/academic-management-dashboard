@@ -1,4 +1,4 @@
-import { grades } from '../../data';
+import { grades, saveData } from '../../data';
 import { Grade } from '@/types';
 
 export async function GET(
@@ -26,6 +26,7 @@ export async function PATCH(
   }
   
   grades[index] = { ...grades[index], ...data };
+  saveData();
   return Response.json(grades[index]);
 }
 
@@ -41,5 +42,6 @@ export async function DELETE(
   }
   
   grades.splice(index, 1);
+  saveData();
   return Response.json({ success: true });
 }

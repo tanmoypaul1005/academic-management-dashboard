@@ -1,5 +1,5 @@
 import { Grade } from '@/types';
-import { grades } from '../data';
+import { grades, saveData } from '../data';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -26,5 +26,6 @@ export async function POST(request: Request) {
     id: Date.now().toString(),
   };
   grades.push(newGrade);
+  saveData();
   return Response.json(newGrade, { status: 201 });
 }
