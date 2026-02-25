@@ -9,6 +9,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
 import CommonModal from '@/components/CommonModal';
 import CourseForm from '@/components/CourseForm';
+import Pagination from '@/components/Pagination';
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -128,6 +129,28 @@ export default function CoursesPage() {
     return facultyIds
       .map(id => faculty.find(f => f.id === id)?.name || 'Unknown')
       .join(', ');
+  }
+
+  // Helper to produce a compact page list like: [1, '...', cur-1, cur, cur+1, '...', total]
+  function getPageList(total: number, current: number) {
+    const delta = 1;
+    const range: Array<number | string> = [];
+    const left = Math.max(1, current - delta);
+    const right = Math.min(total, current + delta);
+
+    if (left > 1) {
+      range.push(1);
+      if (left > 2) range.push('...');
+    }
+
+    for (let i = left; i <= right; i++) range.push(i);
+
+    if (right < total) {
+      if (right < total - 1) range.push('...');
+      range.push(total);
+    }
+
+    return range;
   }
 
   if (loading) {
@@ -276,27 +299,9 @@ export default function CoursesPage() {
         </div>
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="bg-gray-50 dark:bg-slate-700 px-6 py-4 flex items-center justify-between border-t border-gray-200 dark:border-slate-700">
-              <button
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-              >
-                Previous
-              </button>
-              <span className="text-sm text-gray-700 dark:text-gray-300">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-              >
-                Next
-              </button>
-            </div>
-          )}
+            {totalPages > 1 && (
+              <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
+            )}
         </div>
       </AnimatedSection>
 
