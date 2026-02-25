@@ -106,11 +106,7 @@ export default function CourseForm({ course, mode, onSuccess }: CourseFormProps)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-          {mode === 'create' ? 'Add New Course' : 'Edit Course'}
-        </h2>
-
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Course Name */}
           <div className="md:col-span-2">

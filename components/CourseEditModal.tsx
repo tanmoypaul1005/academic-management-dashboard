@@ -1,6 +1,4 @@
 "use client";
-
-import React from 'react';
 import CommonModal from './CommonModal';
 import CourseForm from './CourseForm';
 import { Course } from '@/types';

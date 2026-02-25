@@ -134,13 +134,13 @@ export default function CourseDetailsPage() {
                     {assignedFaculty.length === 0 ? (
                         <p className="text-gray-500 dark:text-gray-400">No faculty assigned</p>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {assignedFaculty.map((member) => (
-                                <div key={member.id} className="p-4 border border-gray-200 dark:border-slate-700 rounded-lg hover:shadow-md transition-shadow bg-white dark:bg-slate-700/50">
-                                    <h3 className="font-semibold text-gray-900 dark:text-white">{member.name}</h3>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">{member.title}</p>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{member.department}</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2">
+                            {assignedFaculty?.map((member) => (
+                                <div key={member.id} className="p-2 border border-gray-200 dark:border-slate-700 rounded-lg hover:shadow-md transition-shadow bg-white dark:bg-slate-700/50">
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">{member?.name}</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">{member?.title}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">{member?.email}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{member?.department}</p>
                                 </div>
                             ))}
                         </div>
