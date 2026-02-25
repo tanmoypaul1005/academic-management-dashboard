@@ -298,7 +298,7 @@ export default function CoursesPage() {
                       </Link>
                       <button
                         onClick={() => { setEditTarget(course); setShowEditModal(true); }}
-                        className="text-green-600 dark:text-green-400 hover:text-green-900"
+                        className="text-green-600 dark:text-green-400"
                       >
                         Edit
                       </button>
