@@ -241,7 +241,7 @@
   "courses": [
     {
       "id": "1",
-      "name": "Data Structures & Algorithms 999",
+      "name": "Data Structures & Algorithms",
       "code": "CS301",
       "department": "Computer Science",
       "credits": 4,
@@ -254,7 +254,7 @@
     },
     {
       "id": "2",
-      "name": "Linear Algebra 9999",
+      "name": "Linear Algebra",
       "code": "MATH201",
       "department": "Mathematics",
       "credits": 3,
