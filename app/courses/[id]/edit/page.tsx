@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { coursesApi } from '@/lib/api';
 import { Course } from '@/types';
 import CourseForm from '@/components/CourseForm';
+import AnimatedSection from '@/components/AnimatedSection';
 
 export default function EditCoursePage() {
   const params = useParams();
@@ -29,7 +30,7 @@ export default function EditCoursePage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
       </div>
     );
   }
@@ -37,14 +38,14 @@ export default function EditCoursePage() {
   if (!course) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900">Course Not Found</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Course Not Found</h2>
       </div>
     );
   }
 
   return (
-    <div>
+    <AnimatedSection>
       <CourseForm course={course} mode="edit" />
-    </div>
+    </AnimatedSection>
   );
 }

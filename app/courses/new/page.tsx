@@ -1,11 +1,12 @@
 'use client';
 
 import CourseForm from '@/components/CourseForm';
+import AnimatedSection from '@/components/AnimatedSection';
 
 export default function NewCoursePage() {
   return (
-    <div>
+    <AnimatedSection>
       <CourseForm mode="create" />
-    </div>
+    </AnimatedSection>
   );
 }
