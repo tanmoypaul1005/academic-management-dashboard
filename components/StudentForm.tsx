@@ -8,7 +8,7 @@ import { studentsApi, coursesApi } from '@/lib/api';
 interface StudentFormProps {
   student?: Student;
   mode: 'create' | 'edit';
-  onSuccess?: () => void;
+  onSuccess?: (created?: Student) => void;
 }
 
 export default function StudentForm({ student, mode, onSuccess }: StudentFormProps) {
@@ -76,15 +76,13 @@ export default function StudentForm({ student, mode, onSuccess }: StudentFormPro
     setLoading(true);
     try {
       if (mode === 'create') {
-        await studentsApi.create(formData);
+        const created = await studentsApi.create(formData);
+        if (onSuccess) onSuccess(created);
+        else router.push('/students');
       } else if (student) {
-        await studentsApi.update(student.id, formData);
-      }
-      
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        router.push('/students');
+        const updated = await studentsApi.update(student.id, formData);
+        if (onSuccess) onSuccess(updated);
+        else router.push('/students');
       }
     } catch (error) {
       console.error('Error saving student:', error);

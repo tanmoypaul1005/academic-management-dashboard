@@ -10,6 +10,7 @@ import AnimatedCard from '@/components/AnimatedCard';
 import CommonModal from '@/components/CommonModal';
 import StudentForm from '@/components/StudentForm';
 import Pagination from '@/components/Pagination';
+import ConfirmModal from '@/components/ConfirmModal';
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -24,6 +25,8 @@ export default function StudentsPage() {
   const [totalStudents, setTotalStudents] = useState(0);
   const [totalPagesServer, setTotalPagesServer] = useState(1);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmTargetId, setConfirmTargetId] = useState<string | null>(null);
   const pageSize = 10;
 
   // Initial load: fetch full list once for filters and the first page
@@ -90,9 +93,16 @@ export default function StudentsPage() {
     };
   }, [currentPage, searchTerm, selectedYear, selectedMajor, selectedCourse]);
 
-  async function handleDelete(id: string) {
-    if (!confirm('Are you sure you want to delete this student?')) return;
-    
+  function handleDeleteRequest(id: string) {
+    setConfirmTargetId(id);
+    setShowConfirm(true);
+  }
+
+  async function handleConfirmDelete() {
+    if (!confirmTargetId) return;
+    const id = confirmTargetId;
+    setShowConfirm(false);
+    setConfirmTargetId(null);
     try {
       await studentsApi.delete(id);
       // Refresh current page after delete
@@ -117,21 +127,34 @@ export default function StudentsPage() {
     }
   }
 
-  function handleAddSuccess() {
+  function handleAddSuccess(created?: Student) {
     setShowAddModal(false);
-    // Refresh full list (for filters) and reload page 1
-    (async () => {
-      setLoading(true);
-      try {
-        const all = await studentsApi.getAll();
-        setStudents(all);
-        setCurrentPage(1);
-      } catch (e) {
-        console.error('Error refreshing after add:', e);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    if (created) {
+      // Prepend new student so it appears first
+      setStudents(prev => [created, ...prev]);
+      // Ensure first page is shown and update pageStudents
+      setCurrentPage(1);
+      setPageStudents(prev => {
+        const newPage = [created, ...prev];
+        return newPage.slice(0, pageSize);
+      });
+      setTotalStudents(prev => prev + 1);
+      setTotalPagesServer(prev => Math.max(1, Math.ceil((prev + 1) / pageSize)));
+    } else {
+      // Fallback: refresh list
+      (async () => {
+        setLoading(true);
+        try {
+          const all = await studentsApi.getAll();
+          setStudents(all);
+          setCurrentPage(1);
+        } catch (e) {
+          console.error('Error refreshing after add:', e);
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
   }
 
   const filteredStudents = filterStudents(students, searchTerm, {
@@ -342,7 +365,7 @@ export default function StudentsPage() {
                       Edit
                     </Link>
                     <button
-                      onClick={() => handleDelete(student.id)}
+                      onClick={() => handleDeleteRequest(student.id)}
                       className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors"
                     >
                       Delete
@@ -370,6 +393,17 @@ export default function StudentsPage() {
       >
         <StudentForm mode="create" onSuccess={handleAddSuccess} />
       </CommonModal>
+      {/* Delete Confirm Modal */}
+      <ConfirmModal
+        isOpen={showConfirm}
+        title="Delete Student"
+        message="Are you sure you want to delete this student? This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        size="sm"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => { setShowConfirm(false); setConfirmTargetId(null); }}
+      />
     </div>
   );
 }
