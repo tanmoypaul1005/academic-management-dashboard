@@ -1,11 +1,16 @@
+'use client';
+
+import AnimatedCard from './AnimatedCard';
+
 interface StatCardProps {
   title: string;
   value: number | string;
   icon: string;
   color?: string;
+  delay?: number;
 }
 
-export default function StatCard({ title, value, icon, color = 'blue' }: StatCardProps) {
+export default function StatCard({ title, value, icon, color = 'blue', delay = 0 }: StatCardProps) {
   const colorClasses = {
     blue: 'bg-blue-500',
     green: 'bg-green-500',
@@ -15,16 +20,16 @@ export default function StatCard({ title, value, icon, color = 'blue' }: StatCar
   }[color] || 'bg-blue-500';
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+    <AnimatedCard delay={delay} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-gray-600 text-sm font-medium mb-1">{title}</p>
-          <p className="text-3xl font-bold text-gray-900">{value}</p>
+          <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">{title}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
         </div>
         <div className={`${colorClasses} text-white text-3xl p-4 rounded-full`}>
           {icon}
         </div>
       </div>
-    </div>
+    </AnimatedCard>
   );
 }

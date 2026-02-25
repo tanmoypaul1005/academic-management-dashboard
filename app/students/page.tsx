@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { studentsApi, coursesApi } from '@/lib/api';
 import { Student, Course } from '@/types';
 import { filterStudents, paginate, getUniqueMajors, getUniqueYears } from '@/lib/utils';
+import AnimatedSection from '@/components/AnimatedSection';
+import AnimatedCard from '@/components/AnimatedCard';
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -71,25 +73,27 @@ export default function StudentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Students</h1>
-          <p className="text-gray-600">Manage student information and enrollments</p>
+      <AnimatedSection animation="fadeIn">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Students</h1>
+            <p className="text-gray-600 dark:text-gray-400">Manage student information and enrollments</p>
+          </div>
+          <Link
+            href="/students/new"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+          >
+            + Add Student
+          </Link>
         </div>
-        <Link
-          href="/students/new"
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          + Add Student
-        </Link>
-      </div>
+      </AnimatedSection>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <AnimatedCard delay={0.1} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Search */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Search
             </label>
             <input
@@ -100,22 +104,22 @@ export default function StudentsPage() {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             />
           </div>
 
           {/* Year Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Year
             </label>
             <select
               value={selectedYear || ''}
               onChange={(e) => {
-                setSelectedYear(e.target.value ? Number(e.target.value) : undefined);
+                setSelectedYear(e.target.value ? parseInt(e.target.value) : undefined);
                 setCurrentPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             >
               <option value="">All Years</option>
               {uniqueYears.map(year => (
@@ -126,7 +130,7 @@ export default function StudentsPage() {
 
           {/* Major Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Major
             </label>
             <select
@@ -135,7 +139,7 @@ export default function StudentsPage() {
                 setSelectedMajor(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             >
               <option value="">All Majors</option>
               {uniqueMajors.map(major => (
@@ -146,7 +150,7 @@ export default function StudentsPage() {
 
           {/* Course Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Course
             </label>
             <select
@@ -155,7 +159,7 @@ export default function StudentsPage() {
                 setSelectedCourse(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             >
               <option value="">All Courses</option>
               {courses.map(course => (
@@ -168,72 +172,73 @@ export default function StudentsPage() {
         </div>
 
         {/* Results count */}
-        <div className="mt-4 text-sm text-gray-600">
-          Showing {paginatedStudents.length} of {filteredStudents.length} students
+        <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+          Showing {filteredStudents.length} of {students.length} students
         </div>
-      </div>
+      </AnimatedCard>
 
       {/* Students Table */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <AnimatedSection animation="slideUp" delay={0.2}>
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-slate-700">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-gray-50 dark:bg-slate-700 border-b border-gray-200 dark:border-slate-600">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Student
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Major
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Year
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   GPA
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Courses
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
               {paginatedStudents.map((student) => (
-                <tr key={student.id} className="hover:bg-gray-50">
+                <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50">
                   <td className="px-6 py-4">
                     <div>
-                      <div className="font-medium text-gray-900">{student.name}</div>
-                      <div className="text-sm text-gray-500">{student.email}</div>
+                      <div className="font-medium text-gray-900 dark:text-white">{student.name}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{student.email}</div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{student.major}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{student.year}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{student.major}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{student.year}</td>
                   <td className="px-6 py-4">
-                    <span className="font-bold text-blue-600">{student?.gpa?.toFixed(2)}</span>
+                    <span className="font-bold text-blue-600 dark:text-blue-400">{student?.gpa?.toFixed(2)}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium">
                       {student.enrolledCourses.length} courses
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
                     <Link
                       href={`/students/${student.id}`}
-                      className="text-blue-600 hover:text-blue-900"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 transition-colors"
                     >
                       View
                     </Link>
                     <Link
                       href={`/students/${student.id}/edit`}
-                      className="text-green-600 hover:text-green-900"
+                      className="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 transition-colors"
                     >
                       Edit
                     </Link>
                     <button
                       onClick={() => handleDelete(student.id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors"
                     >
                       Delete
                     </button>
@@ -246,27 +251,28 @@ export default function StudentsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t">
+          <div className="bg-gray-50 dark:bg-slate-700 px-6 py-4 flex items-center justify-between border-t border-gray-200 dark:border-slate-600">
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+              className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white transition-colors"
             >
               Previous
             </button>
-            <span className="text-sm text-gray-700">
+            <span className="text-sm text-gray-700 dark:text-gray-300">
               Page {currentPage} of {totalPages}
             </span>
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+              className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white transition-colors"
             >
               Next
             </button>
           </div>
         )}
-      </div>
+        </div>
+      </AnimatedSection>
     </div>
   );
 }

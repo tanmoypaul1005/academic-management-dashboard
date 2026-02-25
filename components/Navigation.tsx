@@ -38,13 +38,13 @@ export default function Navigation() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full w-64 bg-gray-900 text-white shadow-xl z-40 transition-transform duration-300 ease-in-out
+          fixed top-0 left-0 h-full w-64 bg-slate-900 dark:bg-slate-950 text-white shadow-xl z-40 transition-transform duration-300 ease-in-out border-r border-slate-800 dark:border-slate-900
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0
         `}
       >
         <div className="p-6">
-          <h1 className="text-2xl font-bold mb-8">
+          <h1 className="text-2xl font-bold mb-8 text-white">
             🎓 Academic Dashboard
           </h1>
           <nav>
@@ -57,7 +57,7 @@ export default function Navigation() {
                       href={item.href}
                       onClick={() => setIsOpen(false)}
                       className={`
-                        flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                        flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
                         ${isActive 
                           ? 'bg-blue-600 text-white' 
                           : 'text-gray-300 hover:bg-gray-800'
