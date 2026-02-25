@@ -10,6 +10,7 @@ import AnimatedCard from '@/components/AnimatedCard';
 import CommonModal from '@/components/CommonModal';
 import CourseForm from '@/components/CourseForm';
 import Pagination from '@/components/Pagination';
+import CourseEditModal from '@/components/CourseEditModal';
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -22,6 +23,8 @@ export default function CoursesPage() {
   const [totalCourses, setTotalCourses] = useState(0);
   const [totalPagesServer, setTotalPagesServer] = useState(1);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editTarget, setEditTarget] = useState<Course | null>(null);
   const pageSize = 10;
 
   useEffect(() => {
@@ -84,6 +87,15 @@ export default function CoursesPage() {
         setLoading(false);
       }
     })();
+  }
+
+  function handleEditSuccess(updated?: Course) {
+    setShowEditModal(false);
+    setEditTarget(null);
+    if (!updated) return;
+    // update local lists
+    setCourses(prev => prev.map(c => c.id === updated.id ? updated : c));
+    setPageCourses(prev => prev.map(c => c.id === updated.id ? updated : c));
   }
 
   // Fetch page data (server-side) or compute client-side when filters/search active
@@ -279,12 +291,12 @@ export default function CoursesPage() {
                       >
                         View
                       </Link>
-                      <Link
-                        href={`/courses/${course.id}/edit`}
+                      <button
+                        onClick={() => { setEditTarget(course); setShowEditModal(true); }}
                         className="text-green-600 dark:text-green-400 hover:text-green-900"
                       >
                         Edit
-                      </Link>
+                      </button>
                       <button
                         onClick={() => handleDelete(course.id)}
                         className="text-red-600 dark:text-red-400 hover:text-red-900"
@@ -314,6 +326,13 @@ export default function CoursesPage() {
       >
         <CourseForm mode="create" onSuccess={handleAddSuccess} />
       </CommonModal>
+      {/* Edit Course Modal */}
+      <CourseEditModal
+        isOpen={showEditModal}
+        course={editTarget}
+        onClose={() => { setShowEditModal(false); setEditTarget(null); }}
+        onSuccess={handleEditSuccess}
+      />
     </div>
   );
 }

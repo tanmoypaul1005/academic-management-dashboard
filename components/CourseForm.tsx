@@ -8,7 +8,7 @@ import { coursesApi, facultyApi } from '@/lib/api';
 interface CourseFormProps {
   course?: Course;
   mode: 'create' | 'edit';
-  onSuccess?: () => void;
+  onSuccess?: (course?: Course) => void;
 }
 
 export default function CourseForm({ course, mode, onSuccess }: CourseFormProps) {
@@ -78,15 +78,13 @@ export default function CourseForm({ course, mode, onSuccess }: CourseFormProps)
     setLoading(true);
     try {
       if (mode === 'create') {
-        await coursesApi.create(formData);
+        const created = await coursesApi.create(formData);
+        if (onSuccess) onSuccess(created);
+        else router.push('/courses');
       } else if (course) {
-        await coursesApi.update(course.id, formData);
-      }
-      
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        router.push('/courses');
+        const updated = await coursesApi.update(course.id, formData);
+        if (onSuccess) onSuccess(updated);
+        else router.push('/courses');
       }
     } catch (error) {
       console.error('Error saving course:', error);
