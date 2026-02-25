@@ -11,6 +11,7 @@ import CommonModal from '@/components/CommonModal';
 import CourseForm from '@/components/CourseForm';
 import Pagination from '@/components/Pagination';
 import CourseEditModal from '@/components/CourseEditModal';
+import ConfirmModal from '@/components/ConfirmModal';
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -25,6 +26,8 @@ export default function CoursesPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editTarget, setEditTarget] = useState<Course | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmTargetId, setConfirmTargetId] = useState<string | null>(null);
   const pageSize = 10;
 
   useEffect(() => {
@@ -46,9 +49,16 @@ export default function CoursesPage() {
     }
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm('Are you sure you want to delete this course?')) return;
-    
+  function handleDeleteRequest(id: string) {
+    setConfirmTargetId(id);
+    setShowConfirm(true);
+  }
+
+  async function handleConfirmDelete() {
+    if (!confirmTargetId) return;
+    const id = confirmTargetId;
+    setShowConfirm(false);
+    setConfirmTargetId(null);
     try {
       await coursesApi.delete(id);
       const updated = courses.filter(c => c.id !== id);
@@ -68,7 +78,6 @@ export default function CoursesPage() {
       }
     } catch (error) {
       console.error('Error deleting course:', error);
-      alert('Failed to delete course');
     }
   }
 
@@ -298,7 +307,7 @@ export default function CoursesPage() {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(course.id)}
+                        onClick={() => handleDeleteRequest(course.id)}
                         className="text-red-600 dark:text-red-400 hover:text-red-900"
                       >
                         Delete
@@ -332,6 +341,17 @@ export default function CoursesPage() {
         course={editTarget}
         onClose={() => { setShowEditModal(false); setEditTarget(null); }}
         onSuccess={handleEditSuccess}
+      />
+      {/* Delete Confirm Modal */}
+      <ConfirmModal
+        isOpen={showConfirm}
+        title="Delete Course"
+        message="Are you sure you want to delete this course? This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        size="sm"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => { setShowConfirm(false); setConfirmTargetId(null); }}
       />
     </div>
   );

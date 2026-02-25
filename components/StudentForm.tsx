@@ -86,7 +86,8 @@ export default function StudentForm({ student, mode, onSuccess }: StudentFormPro
       }
     } catch (error) {
       console.error('Error saving student:', error);
-      alert('Failed to save student');
+      // Previously used alert(); prefer non-blocking console logging for errors
+      console.error('Failed to save student');
     } finally {
       setLoading(false);
     }

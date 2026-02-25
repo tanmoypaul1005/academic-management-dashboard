@@ -88,7 +88,8 @@ export default function CourseForm({ course, mode, onSuccess }: CourseFormProps)
       }
     } catch (error) {
       console.error('Error saving course:', error);
-      alert('Failed to save course');
+      // Previously used alert(); prefer non-blocking console logging for errors
+      console.error('Failed to save course');
     } finally {
       setLoading(false);
     }
