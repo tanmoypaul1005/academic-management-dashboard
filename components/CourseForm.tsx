@@ -196,10 +196,10 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
 
       {/*  Basic Information  */}
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
+        <h3 className="mb-4 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">
           Basic Information
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 
           <div className="md:col-span-2">
             <CommonInput
@@ -259,7 +259,7 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
           />
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Description
             </label>
             <textarea
@@ -267,7 +267,7 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Short overview of this course..."
-              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg resize-none dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -275,7 +275,7 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
 
       {/*  Assigned Instructors  */}
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
+        <h3 className="mb-4 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">
           Assigned Instructors <span className="text-red-500">*</span>
         </h3>
         <div
@@ -292,13 +292,13 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
               {faculty.map((member) => (
                 <label
                   key={member.id}
-                  className="flex items-center gap-3 p-2 rounded hover:bg-gray-50 dark:hover:bg-slate-600/50 cursor-pointer"
+                  className="flex items-center gap-3 p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-600/50"
                 >
                   <input
                     type="checkbox"
                     checked={formData.facultyIds.includes(member.id)}
                     onChange={() => toggleFaculty(member.id)}
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <div>
                     <span className="font-medium text-gray-900 dark:text-white">{member.name}</span>
@@ -320,7 +320,7 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
 
       {/*  Prerequisites  */}
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
+        <h3 className="mb-4 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">
           Prerequisites
         </h3>
 
@@ -329,13 +329,13 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
             {prerequisites.map((prereq, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 text-sm font-medium"
+                className="inline-flex items-center gap-1 px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900/40 dark:text-blue-300"
               >
                 {prereq}
                 <button
                   type="button"
                   onClick={() => removePrerequisite(idx)}
-                  className="ml-1 text-blue-500 dark:text-blue-400 hover:text-red-500 dark:hover:text-red-400 leading-none focus:outline-none"
+                  className="ml-1 leading-none text-blue-500 dark:text-blue-400 hover:text-red-500 dark:hover:text-red-400 focus:outline-none"
                   aria-label={`Remove ${prereq}`}
                 >
                   &times;
@@ -352,12 +352,12 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
             onChange={(e) => setPrereqInput(e.target.value)}
             onKeyDown={handlePrereqKeyDown}
             placeholder="e.g., CS101 — press Enter or click Add"
-            className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="flex-1 px-4 py-2 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <button
             type="button"
             onClick={addPrerequisite}
-            className="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 text-sm transition-colors"
+            className="px-4 py-2 text-sm text-white transition-colors bg-blue-600 rounded-lg dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600"
           >
             Add
           </button>
@@ -369,7 +369,7 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
 
       {/*  Metadata  */}
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
+        <h3 className="mb-4 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">
           Metadata
         </h3>
 
@@ -379,29 +379,29 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
 
         <div className="space-y-2">
           {metaEntries.map((entry, idx) => (
-            <div key={idx} className="flex gap-2 items-center">
+            <div key={idx} className="flex items-center gap-2">
               <input
                 type="text"
                 value={entry.key}
                 onChange={(e) => updateMetaEntry(idx, 'key', e.target.value)}
                 placeholder="Key (e.g., room)"
-                className="w-36 shrink-0 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-3 py-2 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg w-36 shrink-0 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
-              <span className="text-gray-400 dark:text-gray-500 text-sm select-none">:</span>
+              <span className="text-sm text-gray-400 select-none dark:text-gray-500">:</span>
               <input
                 type="text"
                 value={entry.value}
                 onChange={(e) => updateMetaEntry(idx, 'value', e.target.value)}
                 placeholder="Value (e.g., Hall 4B)"
-                className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 px-3 py-2 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               <button
                 type="button"
                 onClick={() => removeMetaEntry(idx)}
-                className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors focus:outline-none"
+                className="p-2 text-gray-400 transition-colors dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 focus:outline-none"
                 aria-label="Remove entry"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -412,9 +412,9 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
         <button
           type="button"
           onClick={addMetaEntry}
-          className="mt-3 flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+          className="flex items-center gap-1 mt-3 text-sm text-blue-600 transition-colors dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
           Add metadata field
@@ -425,18 +425,18 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
       </div>
 
       {/*  Actions  */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200 dark:border-slate-700">
+      <div className="flex flex-col gap-3 pt-4 border-t border-gray-200 sm:flex-row dark:border-slate-700">
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          className="px-6 py-2 font-medium text-white transition-colors bg-blue-600 rounded-lg dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? 'Saving' : mode === 'create' ? 'Create Course' : 'Update Course'}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors font-medium"
+          className="px-6 py-2 font-medium text-gray-700 transition-colors bg-gray-200 rounded-lg dark:bg-slate-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
         >
           Cancel
         </button>
