@@ -12,6 +12,7 @@ import StudentForm from '@/components/StudentForm';
 import Pagination from '@/components/Pagination';
 import ConfirmModal from '@/components/ConfirmModal';
 import { useRouter } from 'next/navigation';
+import { EditIcon, Eye, Trash2 } from 'lucide-react';
 
 export default function StudentsPage() {
     const [students, setStudents] = useState<Student[]>([]);
@@ -34,6 +35,8 @@ export default function StudentsPage() {
     const router = useRouter();
     const [successToast, setSuccessToast] = useState<string | null>(null);
     const addingRef = useRef(false);
+    const [highlightId, setHighlightId] = useState<string | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
 
     // Initial load: fetch full list once for filters and the first page
     useEffect(() => {
@@ -106,8 +109,14 @@ export default function StudentsPage() {
         const id = confirmTargetId;
         setShowConfirm(false);
         setConfirmTargetId(null);
+        // animate the row out first
+        setDeletingId(id);
+        await new Promise(r => setTimeout(r, 350));
         try {
             await studentsApi.delete(id);
+            setDeletingId(null);
+            setSuccessToast('Student deleted successfully!');
+            setTimeout(() => setSuccessToast(null), 3000);
             // Refresh current page after delete
             const updated = students.filter(s => s.id !== id);
             setStudents(updated);
@@ -165,6 +174,11 @@ export default function StudentsPage() {
             setStudents(prev => prev.map(s => s.id === updated.id ? updated : s));
             // update current page items
             setPageStudents(prev => prev.map(s => s.id === updated.id ? updated : s));
+            // flash green highlight
+            setHighlightId(updated.id);
+            setTimeout(() => setHighlightId(null), 1500);
+            setSuccessToast('Student updated successfully!');
+            setTimeout(() => setSuccessToast(null), 3000);
         }
     }
 
@@ -205,7 +219,7 @@ export default function StudentsPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin"></div>
             </div>
         );
     }
@@ -214,23 +228,23 @@ export default function StudentsPage() {
         <div className="space-y-6">
             {/* Success Toast */}
             {successToast && (
-                <div className="fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3 bg-green-600 text-white rounded-lg shadow-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="fixed z-50 flex items-center gap-3 px-5 py-3 text-white bg-green-600 rounded-lg shadow-xl top-6 right-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     <span className="text-sm font-medium">{successToast}</span>
-                    <button onClick={() => setSuccessToast(null)} className="ml-2 opacity-80 hover:opacity-100 focus:outline-none text-lg leading-none">&times;</button>
+                    <button onClick={() => setSuccessToast(null)} className="ml-2 text-lg leading-none opacity-80 hover:opacity-100 focus:outline-none">&times;</button>
                 </div>
             )}
             <AnimatedSection animation="fadeIn">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Students</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">Students</h1>
                         <p className="text-gray-600 dark:text-gray-400">Manage student information and enrollments</p>
                     </div>
                     <button
                         onClick={() => setShowAddModal(true)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                        className="px-4 py-2 text-white transition-colors bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg"
                     >
                         + Add Student
                     </button>
@@ -238,11 +252,11 @@ export default function StudentsPage() {
             </AnimatedSection>
 
             {/* Search and Filters */}
-            <AnimatedCard delay={0.1} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <AnimatedCard delay={0.1} className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                     {/* Search */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
                             Search
                         </label>
                         <input
@@ -253,13 +267,13 @@ export default function StudentsPage() {
                                 setSearchTerm(e.target.value);
                                 setCurrentPage(1);
                             }}
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
+                            className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:border-slate-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white"
                         />
                     </div>
 
                     {/* Year Filter */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
                             Year
                         </label>
                         <select
@@ -268,7 +282,7 @@ export default function StudentsPage() {
                                 setSelectedYear(e.target.value ? parseInt(e.target.value) : undefined);
                                 setCurrentPage(1);
                             }}
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
+                            className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:border-slate-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white"
                         >
                             <option value="">All Years</option>
                             {uniqueYears.map(year => (
@@ -279,7 +293,7 @@ export default function StudentsPage() {
 
                     {/* Major Filter */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
                             Major
                         </label>
                         <select
@@ -288,7 +302,7 @@ export default function StudentsPage() {
                                 setSelectedMajor(e.target.value);
                                 setCurrentPage(1);
                             }}
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
+                            className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:border-slate-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white"
                         >
                             <option value="">All Majors</option>
                             {uniqueMajors.map(major => (
@@ -299,7 +313,7 @@ export default function StudentsPage() {
 
                     {/* Course Filter */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
                             Course
                         </label>
                         <select
@@ -308,7 +322,7 @@ export default function StudentsPage() {
                                 setSelectedCourse(e.target.value);
                                 setCurrentPage(1);
                             }}
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
+                            className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:border-slate-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white"
                         >
                             <option value="">All Courses</option>
                             {courses.map(course => (
@@ -328,38 +342,44 @@ export default function StudentsPage() {
 
             {/* Students Table */}
             <AnimatedSection animation="slideUp" delay={0.2}>
-                <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-slate-700">
+                <div className="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gray-50 dark:bg-slate-700 border-b border-gray-200 dark:border-slate-600">
+                            <thead className="border-b border-gray-200 bg-gray-50 dark:bg-slate-700 dark:border-slate-600">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
                                         Student
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
                                         Major
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
                                         Year
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
                                         GPA
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
                                         Courses
                                     </th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-right text-gray-500 uppercase dark:text-gray-400">
                                         Actions
                                     </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
                                 {paginatedStudents.map((student) => (
-                                    <tr 
-                                    onClick={() => {
-                                        router.push(`/students/${student.id}`);
-                                    }} 
-                                    key={student.id} className="hover:bg-gray-50 cursor-pointer dark:hover:bg-slate-700/50">
+                                    <tr
+                                        onClick={() => {
+                                            router.push(`/students/${student.id}`);
+                                        }}
+                                        key={student.id}
+                                        className={`cursor-pointer transition-all duration-500 ${deletingId === student.id
+                                            ? 'opacity-0 scale-95 bg-red-50 dark:bg-red-900/20'
+                                            : highlightId === student.id
+                                                ? 'bg-green-50 dark:bg-green-900/20'
+                                                : 'hover:bg-gray-50 dark:hover:bg-slate-700/50'
+                                            }`}>
                                         <td className="px-6 py-4">
                                             <div>
                                                 <div className="font-medium text-gray-900 dark:text-white">{student.name}</div>
@@ -376,33 +396,35 @@ export default function StudentsPage() {
                                                 {student.enrolledCourses.length} courses
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
-                                            <Link
-                                                href={`/students/${student.id}`}
-                                                className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 transition-colors"
-                                            >
-                                                View
-                                            </Link>
+                                        <td className="px-3 py-4 space-x-2 text-sm font-medium text-right">
+                                            <button>
+                                                <Link
+                                                    href={`/students/${student.id}`}
+                                                    className="text-blue-600 transition-colors dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
+                                                >
+                                                    <Eye className="w-6 h-6" />
+                                                </Link>
+                                            </button>
                                             <button
                                                 onClick={(e) => {
-                                                    e.stopPropagation(); 
+                                                    e.stopPropagation();
                                                     setEditTarget(student);
                                                     setShowEditModal(true);
                                                 }}
-                                                className="text-green-600 cursor-pointer dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 transition-colors"
+                                                className="text-green-600 transition-colors cursor-pointer dark:text-green-400 hover:text-green-900 dark:hover:text-green-300"
                                             >
-                                                Edit
+                                                <EditIcon className="w-5 h-5" />
                                             </button>
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setConfirmTargetId(student.id);
-                                                        setShowConfirm(true);
-                                                    }}
-                                                    className="text-red-600 cursor-pointer dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors"
-                                                >
-                                                    Delete
-                                                </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setConfirmTargetId(student.id);
+                                                    setShowConfirm(true);
+                                                }}
+                                                className="text-red-600 transition-colors cursor-pointer dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                                            >
+                                                <Trash2 className="w-5 h-5" />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
