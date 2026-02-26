@@ -257,16 +257,3 @@ All data shapes are defined once in `types/index.ts` (`Student`, `Course`, `Facu
 | DELETE | `/api/grades/:id` | Delete grade |
 | POST | `/api/seed` | Seed the database with sample data |
 | POST | `/api/cleanup` | Remove all data from the database |
-
----
-
-## Deployment
-
-The project is pre-configured for **Vercel**:
-
-1. Push the repository to GitHub
-2. Import the project in [Vercel](https://vercel.com)
-3. Add the `MONGODB_URI` environment variable in the Vercel project settings
-4. Deploy  Vercel will run `npm run build` and serve the app automatically
-
-See [vercel.json](./vercel.json) for build configuration.
