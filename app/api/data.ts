@@ -12,7 +12,12 @@ async function getDB() {
 
 export async function getStudents(): Promise<Student[]> {
   const db = await getDB();
-  const all = await db.collection<Student>('students').find({}, { projection: { _id: 0 } }).toArray();
+  const all = (
+    await db
+      .collection<Student>('students')
+      .find({}, { projection: { _id: 0 } })
+      .toArray()
+  ).reverse();
   // Deduplicate by custom id in case of duplicate MongoDB documents
   const seen = new Set<string>();
   return all.filter(s => { if (seen.has(s.id)) return false; seen.add(s.id); return true; });
