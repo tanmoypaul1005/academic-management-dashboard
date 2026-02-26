@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { studentsApi, coursesApi } from '@/lib/api';
 import { Student, Course } from '@/types';
@@ -32,6 +32,8 @@ export default function StudentsPage() {
     const [editTarget, setEditTarget] = useState<Student | null>(null);
     const pageSize = 10;
     const router = useRouter();
+    const [successToast, setSuccessToast] = useState<string | null>(null);
+    const addingRef = useRef(false);
 
     // Initial load: fetch full list once for filters and the first page
     useEffect(() => {
@@ -62,7 +64,8 @@ export default function StudentsPage() {
     useEffect(() => {
         let mounted = true;
         async function loadPage() {
-            setLoading(true);
+            if (!addingRef.current) setLoading(true);
+            addingRef.current = false;
             try {
                 const hasFilters = !!(searchTerm || selectedYear || selectedMajor || selectedCourse);
                 if (hasFilters) {
@@ -128,19 +131,17 @@ export default function StudentsPage() {
 
     function handleAddSuccess(created?: Student) {
         setShowAddModal(false);
+        setSuccessToast('Student added successfully!');
+        setTimeout(() => setSuccessToast(null), 3000);
         if (created) {
-            // Prepend new student so it appears first
+            addingRef.current = true;
+            const newTotal = totalStudents + 1;
             setStudents(prev => [created, ...prev]);
-            // Ensure first page is shown and update pageStudents
+            setPageStudents(prev => [created, ...prev].slice(0, pageSize));
+            setTotalStudents(newTotal);
+            setTotalPagesServer(Math.max(1, Math.ceil(newTotal / pageSize)));
             setCurrentPage(1);
-            setPageStudents(prev => {
-                const newPage = [created, ...prev];
-                return newPage.slice(0, pageSize);
-            });
-            setTotalStudents(prev => prev + 1);
-            setTotalPagesServer(prev => Math.max(1, Math.ceil((prev + 1) / pageSize)));
         } else {
-            // Fallback: refresh list
             (async () => {
                 setLoading(true);
                 try {
@@ -211,6 +212,16 @@ export default function StudentsPage() {
 
     return (
         <div className="space-y-6">
+            {/* Success Toast */}
+            {successToast && (
+                <div className="fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3 bg-green-600 text-white rounded-lg shadow-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-sm font-medium">{successToast}</span>
+                    <button onClick={() => setSuccessToast(null)} className="ml-2 opacity-80 hover:opacity-100 focus:outline-none text-lg leading-none">&times;</button>
+                </div>
+            )}
             <AnimatedSection animation="fadeIn">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
