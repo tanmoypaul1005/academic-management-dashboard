@@ -11,6 +11,7 @@ import AnimatedCard from '@/components/AnimatedCard';
 import CommonInput from '@/components/CommonInput';
 import CommonSelect from '@/components/CommonSelect';
 import { ArrowLeft, Pencil, Trash2, Plus, X } from 'lucide-react';
+import GradeSuccessModal from '@/components/GradeSuccessModal';
 
 const GRADE_OPTIONS = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
 
@@ -45,6 +46,8 @@ export default function StudentProfilePage() {
     const [gradeForm, setGradeForm] = useState<GradeFormData>(emptyGradeForm());
     const [gradeErrors, setGradeErrors] = useState<Record<string, string>>({});
     const [gradeSaving, setGradeSaving] = useState(false);
+    const [gradeSuccessOpen, setGradeSuccessOpen] = useState(false);
+    const [gradeSuccessMessage, setGradeSuccessMessage] = useState('');
 
     useEffect(() => {
         async function fetchData() {
@@ -142,11 +145,14 @@ export default function StudentProfilePage() {
             if (editingGrade) {
                 const updated = await gradesApi.update(editingGrade.id, gradeForm);
                 setGrades(prev => prev.map(g => g.id === updated.id ? updated : g));
+                setGradeSuccessMessage('Grade updated successfully!');
             } else {
                 const created = await gradesApi.create(gradeForm);
                 setGrades(prev => [...prev, created]);
+                setGradeSuccessMessage('Grade added successfully!');
             }
             setGradeModalOpen(false);
+            setGradeSuccessOpen(true);
         } catch (err) {
             console.error('Failed to save grade', err);
         } finally {
@@ -419,6 +425,12 @@ export default function StudentProfilePage() {
                     </div>
                 </div>
             )}
+
+            <GradeSuccessModal
+                isOpen={gradeSuccessOpen}
+                message={gradeSuccessMessage}
+                onClose={() => setGradeSuccessOpen(false)}
+            />
         </div>
     );
 }

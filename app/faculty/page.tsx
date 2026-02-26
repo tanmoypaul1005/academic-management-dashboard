@@ -6,6 +6,7 @@ import { Student, Course, GradeFormData } from '@/types';
 import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
 import CommonSelect from '@/components/CommonSelect';
+import GradeSuccessModal from '@/components/GradeSuccessModal';
 
 export default function FacultyPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -25,6 +26,8 @@ export default function FacultyPage() {
     numericGrade: 0,
     semester: 'Fall 2025',
   });
+  const [gradeSuccessOpen, setGradeSuccessOpen] = useState(false);
+  const [gradeSuccessMessage, setGradeSuccessMessage] = useState('');
 
   const SEMESTER_OPTIONS = [
     'Fall 2026',
@@ -121,11 +124,12 @@ export default function FacultyPage() {
       if (duplicate) {
         // Update existing grade instead of creating a duplicate
         await gradesApi.update(duplicate.id, gradeForm as GradeFormData);
-        alert('Grade updated successfully!');
+        setGradeSuccessMessage('Grade updated successfully!');
       } else {
         await gradesApi.create(gradeForm as GradeFormData);
-        alert('Grade added successfully!');
+        setGradeSuccessMessage('Grade added successfully!');
       }
+      setGradeSuccessOpen(true);
 
       setGradeForm({
         studentId: '',
@@ -487,6 +491,11 @@ export default function FacultyPage() {
           )}
         </div>
       </AnimatedCard>
+        <GradeSuccessModal
+          isOpen={gradeSuccessOpen}
+          message={gradeSuccessMessage}
+          onClose={() => setGradeSuccessOpen(false)}
+        />
     </div>
   );
 }
