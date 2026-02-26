@@ -89,15 +89,15 @@ export default function StudentProfilePage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
+                <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin dark:border-blue-400"></div>
             </div>
         );
     }
 
     if (!student) {
         return (
-            <div className="text-center py-12">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Student Not Found</h2>
+            <div className="py-12 text-center">
+                <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">Student Not Found</h2>
                 <Link href="/students" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
                     Back to Students
                 </Link>
@@ -178,40 +178,40 @@ export default function StudentProfilePage() {
         <div className="space-y-6">
             {/* Header */}
             <AnimatedSection>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                     <Link className='cursor-pointer' href="/students">
                         <ArrowLeft />
                     </Link>
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{student.name}</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">{student.name}</h1>
                         <p className="text-gray-600 dark:text-gray-400">{student.email}</p>
                     </div>
                 </div>
             </AnimatedSection>
 
             {/* Student Info Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <AnimatedCard>
-                    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-                        <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Major</p>
+                    <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+                        <p className="mb-1 text-sm font-medium text-gray-600 dark:text-gray-400">Major</p>
                         <p className="text-2xl font-bold text-gray-900 dark:text-white">{student.major}</p>
                     </div>
                 </AnimatedCard>
                 <AnimatedCard>
-                    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-                        <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Year</p>
+                    <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+                        <p className="mb-1 text-sm font-medium text-gray-600 dark:text-gray-400">Year</p>
                         <p className="text-2xl font-bold text-gray-900 dark:text-white">Year {student.year}</p>
                     </div>
                 </AnimatedCard>
                 <AnimatedCard>
-                    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-                        <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Current GPA</p>
+                    <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+                        <p className="mb-1 text-sm font-medium text-gray-600 dark:text-gray-400">Current GPA</p>
                         <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{student?.gpa?.toFixed(2)}</p>
                     </div>
                 </AnimatedCard>
                 <AnimatedCard>
-                    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-                        <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Enrolled Courses</p>
+                    <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+                        <p className="mb-1 text-sm font-medium text-gray-600 dark:text-gray-400">Enrolled Courses</p>
                         <p className="text-2xl font-bold text-green-600 dark:text-green-400">{enrolledCourses.length}</p>
                     </div>
                 </AnimatedCard>
@@ -220,19 +220,19 @@ export default function StudentProfilePage() {
             {/* Progress Summary */}
             {grades.length > 0 && (
                 <AnimatedSection>
-                    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Academic Progress</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+                        <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Academic Progress</h2>
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                             <div>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Total Courses Completed</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">Total Courses Completed</p>
                                 <p className="text-2xl font-bold text-gray-900 dark:text-white">{progress.totalCourses}</p>
                             </div>
                             <div>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Average Grade</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">Average Grade</p>
                                 <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{progress.averageGrade.toFixed(1)}%</p>
                             </div>
                             <div>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Letter Grade</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">Letter Grade</p>
                                 <p className="text-2xl font-bold text-green-600 dark:text-green-400">{progress.letterGrade}</p>
                             </div>
                         </div>
@@ -242,8 +242,8 @@ export default function StudentProfilePage() {
 
             {/* Enrolled Courses */}
             <AnimatedSection>
-                <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Enrolled Courses</h2>
+                <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+                    <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Enrolled Courses</h2>
                     {enrolledCourses.length === 0 ? (
                         <p className="text-gray-500 dark:text-gray-400">No courses enrolled</p>
                     ) : (
@@ -251,10 +251,10 @@ export default function StudentProfilePage() {
                             <table className="w-full">
                                 <thead className="border-b border-gray-200 dark:border-slate-700">
                                     <tr>
-                                        <th className="pb-3 text-left text-sm font-medium text-gray-600 dark:text-gray-400">Course Code</th>
-                                        <th className="pb-3 text-left text-sm font-medium text-gray-600 dark:text-gray-400">Course Name</th>
-                                        <th className="pb-3 text-left text-sm font-medium text-gray-600 dark:text-gray-400">Department</th>
-                                        <th className="pb-3 text-left text-sm font-medium text-gray-600 dark:text-gray-400">Credits</th>
+                                        <th className="pb-3 text-sm font-medium text-left text-gray-600 dark:text-gray-400">Course Code</th>
+                                        <th className="pb-3 text-sm font-medium text-left text-gray-600 dark:text-gray-400">Course Name</th>
+                                        <th className="pb-3 text-sm font-medium text-left text-gray-600 dark:text-gray-400">Department</th>
+                                        <th className="pb-3 text-sm font-medium text-left text-gray-600 dark:text-gray-400">Credits</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
@@ -275,7 +275,7 @@ export default function StudentProfilePage() {
 
             {/* Grades & Progress */}
             <AnimatedSection>
-                <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
+                <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white">Grades &amp; Progress</h2>
                         <button
@@ -286,17 +286,17 @@ export default function StudentProfilePage() {
                         </button>
                     </div>
                     {grades.length === 0 ? (
-                        <p className="text-gray-500 dark:text-gray-400 text-sm">No grades yet. Click &quot;Add Grade&quot; to record one.</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">No grades yet. Click &quot;Add Grade&quot; to record one.</p>
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead className="border-b border-gray-200 dark:border-slate-700">
                                     <tr>
-                                        <th className="pb-3 text-left text-sm font-medium text-gray-600 dark:text-gray-400">Course</th>
-                                        <th className="pb-3 text-left text-sm font-medium text-gray-600 dark:text-gray-400">Semester</th>
-                                        <th className="pb-3 text-left text-sm font-medium text-gray-600 dark:text-gray-400">Grade</th>
-                                        <th className="pb-3 text-left text-sm font-medium text-gray-600 dark:text-gray-400">Percentage</th>
-                                        <th className="pb-3 text-left text-sm font-medium text-gray-600 dark:text-gray-400">Actions</th>
+                                        <th className="pb-3 text-sm font-medium text-left text-gray-600 dark:text-gray-400">Course</th>
+                                        <th className="pb-3 text-sm font-medium text-left text-gray-600 dark:text-gray-400">Semester</th>
+                                        <th className="pb-3 text-sm font-medium text-left text-gray-600 dark:text-gray-400">Grade</th>
+                                        <th className="pb-3 text-sm font-medium text-left text-gray-600 dark:text-gray-400">Percentage</th>
+                                        <th className="pb-3 text-sm font-medium text-left text-gray-600 dark:text-gray-400">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
@@ -310,7 +310,7 @@ export default function StudentProfilePage() {
                                                 </td>
                                                 <td className="py-3 text-gray-600 dark:text-gray-400">{grade.semester}</td>
                                                 <td className="py-3">
-                                                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 font-bold">
+                                                    <span className="inline-flex items-center px-3 py-1 font-bold text-green-800 bg-green-100 rounded-full dark:bg-green-900/30 dark:text-green-400">
                                                         {grade.grade}
                                                     </span>
                                                 </td>
@@ -347,7 +347,7 @@ export default function StudentProfilePage() {
             {gradeModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/50" onClick={() => setGradeModalOpen(false)} />
-                    <div className="relative bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6 space-y-4">
+                    <div className="relative w-full max-w-md p-6 space-y-4 bg-white shadow-2xl dark:bg-slate-800 rounded-xl">
                         {/* Modal Header */}
                         <div className="flex items-center justify-between">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -358,7 +358,7 @@ export default function StudentProfilePage() {
                             </button>
                         </div>
 
-                        {/* Course select */}
+                        {/* Course select — only enrolled courses */}
                         <CommonSelect
                             label="Course"
                             required
@@ -367,10 +367,19 @@ export default function StudentProfilePage() {
                             error={gradeErrors.courseId}
                         >
                             <option value="">Select Course</option>
-                            {courses.map(c => (
-                                <option key={c.id} value={c.id}>{c.code} — {c.name}</option>
-                            ))}
+                            {enrolledCourses.length === 0 ? (
+                                <option disabled value="">No enrolled courses</option>
+                            ) : (
+                                enrolledCourses.map(c => (
+                                    <option key={c.id} value={c.id}>{c.code} — {c.name}</option>
+                                ))
+                            )}
                         </CommonSelect>
+                        {enrolledCourses.length === 0 && (
+                            <p className="text-xs text-amber-500 dark:text-amber-400 -mt-2">
+                                This student has no enrolled courses. Enroll them first to add grades.
+                            </p>
+                        )}
 
                         {/* Semester */}
                         <CommonSelect
@@ -415,13 +424,13 @@ export default function StudentProfilePage() {
                             <button
                                 onClick={handleSaveGrade}
                                 disabled={gradeSaving}
-                                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                                className="flex-1 px-4 py-2 text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
                             >
                                 {gradeSaving ? 'Saving…' : editingGrade ? 'Update Grade' : 'Add Grade'}
                             </button>
                             <button
                                 onClick={() => setGradeModalOpen(false)}
-                                className="px-4 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors"
+                                className="px-4 py-2 text-gray-700 transition-colors bg-gray-200 rounded-lg dark:bg-slate-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
                             >
                                 Cancel
                             </button>
