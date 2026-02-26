@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { studentsApi, coursesApi, facultyApi } from '@/lib/api';
 import { Student, Course, Faculty } from '@/types';
@@ -42,7 +41,7 @@ export default function Dashboard() {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="w-12 h-12 mx-auto border-b-2 border-blue-600 rounded-full animate-spin"></div>
           <p className="mt-4 text-gray-600 dark:text-gray-400">Loading dashboard...</p>
         </div>
       </div>
@@ -115,12 +114,12 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <AnimatedSection animation="fadeIn">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
+        <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">Dashboard</h1>
         <p className="text-gray-600 dark:text-gray-400">Welcome to the Academic Management System</p>
       </AnimatedSection>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <StatCard
           title="Total Students"
           value={students.length}
@@ -145,10 +144,10 @@ export default function Dashboard() {
       </div>
 
       {/* Charts and Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Bar Chart */}
-        <AnimatedCard delay={0.4} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-3 sm:p-6 border border-gray-200 dark:border-slate-700">
-          <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-2">📊 Course Enrollments</h2>
+        <AnimatedCard delay={0.4} className="p-3 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 sm:p-6 dark:border-slate-700">
+          <h2 className="mb-2 text-base font-bold text-gray-900 sm:text-lg dark:text-white">📊 Course Enrollments</h2>
           <div className="overflow-x-auto">
             <Chart
               options={courseChartOptions}
@@ -161,17 +160,17 @@ export default function Dashboard() {
         </AnimatedCard>
 
         {/* Top Students Leaderboard */}
-        <AnimatedCard delay={0.5} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+        <AnimatedCard delay={0.5} className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
             🏆 Top Students (by GPA)
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="text-left border-b border-gray-200 dark:border-slate-700">
-                  <th className="pb-3 text-gray-600 dark:text-gray-400 font-medium">Rank</th>
-                  <th className="pb-3 text-gray-600 dark:text-gray-400 font-medium">Student</th>
-                  <th className="pb-3 text-gray-600 dark:text-gray-400 font-medium">GPA</th>
+                  <th className="pb-3 font-medium text-gray-600 dark:text-gray-400">Rank</th>
+                  <th className="pb-3 font-medium text-gray-600 dark:text-gray-400">Student</th>
+                  <th className="pb-3 font-medium text-gray-600 dark:text-gray-400">GPA</th>
                 </tr>
               </thead>
               <tbody>
@@ -207,30 +206,30 @@ export default function Dashboard() {
 
       {/* Most Popular Courses */}
       <AnimatedSection animation="slideUp" delay={0.6}>
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-slate-700">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
             📈 Most Popular Courses
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="text-left border-b border-gray-200 dark:border-slate-700">
-                  <th className="pb-3 text-gray-600 dark:text-gray-400 font-medium">Course Code</th>
-                  <th className="pb-3 text-gray-600 dark:text-gray-400 font-medium">Course Name</th>
-                  <th className="pb-3 text-gray-600 dark:text-gray-400 font-medium">Department</th>
-                  <th className="pb-3 text-gray-600 dark:text-gray-400 font-medium text-right">Enrollments</th>
+                  <th className="pb-3 font-medium text-gray-600 dark:text-gray-400">Course Code</th>
+                  <th className="pb-3 font-medium text-gray-600 dark:text-gray-400">Course Name</th>
+                  <th className="pb-3 font-medium text-gray-600 dark:text-gray-400">Department</th>
+                  <th className="pb-3 font-medium text-right text-gray-600 dark:text-gray-400">Enrollments</th>
                 </tr>
               </thead>
               <tbody>
                 {popularCourses.map((course) => (
-                  <tr key={course.id} className="border-b border-gray-200 dark:border-slate-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                  <tr key={course.id} className="transition-colors border-b border-gray-200 dark:border-slate-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-slate-700/50">
                     <td className="py-3">
                       <span className="font-mono font-medium text-blue-600 dark:text-blue-400">{course.code}</span>
                     </td>
                     <td className="py-3 font-medium text-gray-900 dark:text-white">{course.name}</td>
                     <td className="py-3 text-gray-600 dark:text-gray-400">{course.department}</td>
                     <td className="py-3 text-right">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 font-medium">
+                      <span className="inline-flex items-center px-3 py-1 font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900/30 dark:text-blue-300">
                         {course.enrollmentCount}
                       </span>
                     </td>

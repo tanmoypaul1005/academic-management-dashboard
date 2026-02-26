@@ -12,7 +12,15 @@ async function getDB() {
 
 export async function getStudents(): Promise<Student[]> {
   const db = await getDB();
-  return db.collection<Student>('students').find({}, { projection: { _id: 0 } }).toArray();
+  const all = (
+    await db
+      .collection<Student>('students')
+      .find({}, { projection: { _id: 0 } })
+      .toArray()
+  ).reverse();
+  // Deduplicate by custom id in case of duplicate MongoDB documents
+  const seen = new Set<string>();
+  return all.filter(s => { if (seen.has(s.id)) return false; seen.add(s.id); return true; });
 }
 
 export async function getStudentById(id: string): Promise<Student | null> {
@@ -28,6 +36,10 @@ export async function createStudent(student: Student): Promise<Student> {
 
 export async function updateStudent(id: string, data: Partial<Student>): Promise<Student | null> {
   const db = await getDB();
+  // Deduplicate enrolledCourses before persisting
+  if (Array.isArray(data.enrolledCourses)) {
+    data = { ...data, enrolledCourses: [...new Set(data.enrolledCourses)] };
+  }
   const result = await db.collection<Student>('students').findOneAndUpdate(
     { id },
     { $set: data },
@@ -46,7 +58,10 @@ export async function deleteStudent(id: string): Promise<boolean> {
 
 export async function getCourses(): Promise<Course[]> {
   const db = await getDB();
-  return db.collection<Course>('courses').find({}, { projection: { _id: 0 } }).toArray();
+  const all = await db.collection<Course>('courses').find({}, { projection: { _id: 0 } }).toArray();
+  // Deduplicate by custom id in case of duplicate MongoDB documents
+  const seen = new Set<string>();
+  return all.filter(c => { if (seen.has(c.id)) return false; seen.add(c.id); return true; });
 }
 
 export async function getCourseById(id: string): Promise<Course | null> {

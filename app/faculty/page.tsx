@@ -7,6 +7,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
 import CommonSelect from '@/components/CommonSelect';
 import GradeSuccessModal from '@/components/GradeSuccessModal';
+import SuccessModal from '@/components/SuccessModal';
 
 export default function FacultyPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -28,6 +29,10 @@ export default function FacultyPage() {
   });
   const [gradeSuccessOpen, setGradeSuccessOpen] = useState(false);
   const [gradeSuccessMessage, setGradeSuccessMessage] = useState('');
+
+  // Assign success modal
+  const [assignSuccessOpen, setAssignSuccessOpen] = useState(false);
+  const [assignSuccessMessage, setAssignSuccessMessage] = useState('');
 
   const SEMESTER_OPTIONS = [
     'Fall 2026',
@@ -78,12 +83,12 @@ export default function FacultyPage() {
     }
 
     try {
-      // Update each student's enrolled courses
+      // Fetch fresh student data from DB before updating to avoid stale-state duplicates
       for (const studentId of selectedStudents) {
-        const student = students.find(s => s.id === studentId);
-        if (student && !student.enrolledCourses.includes(selectedCourse)) {
+        const freshStudent = await studentsApi.getById(studentId);
+        if (freshStudent && !freshStudent.enrolledCourses.includes(selectedCourse)) {
           await studentsApi.update(studentId, {
-            enrolledCourses: [...student.enrolledCourses, selectedCourse],
+            enrolledCourses: [...new Set([...freshStudent.enrolledCourses, selectedCourse])],
           });
         }
       }
@@ -99,7 +104,8 @@ export default function FacultyPage() {
         });
       }
 
-      alert('Students assigned successfully!');
+      setAssignSuccessMessage(`${selectedStudents.length} student(s) successfully assigned to the course!`);
+      setAssignSuccessOpen(true);
       setSelectedStudents([]);
       fetchData();
     } catch (error) {
@@ -152,18 +158,19 @@ export default function FacultyPage() {
 
     try {
       for (const studentId of bulkStudents) {
-        const student = students.find(s => s.id === studentId);
-        if (!student) continue;
+        // Fetch fresh student from DB to avoid stale-state duplicates
+        const freshStudent = await studentsApi.getById(studentId);
+        if (!freshStudent) continue;
 
         if (bulkAction === 'enroll') {
-          if (!student.enrolledCourses.includes(bulkCourse)) {
+          if (!freshStudent.enrolledCourses.includes(bulkCourse)) {
             await studentsApi.update(studentId, {
-              enrolledCourses: [...student.enrolledCourses, bulkCourse],
+              enrolledCourses: [...new Set([...freshStudent.enrolledCourses, bulkCourse])],
             });
           }
         } else {
           await studentsApi.update(studentId, {
-            enrolledCourses: student.enrolledCourses.filter(id => id !== bulkCourse),
+            enrolledCourses: freshStudent.enrolledCourses.filter(id => id !== bulkCourse),
           });
         }
       }
@@ -315,7 +322,7 @@ export default function FacultyPage() {
                     </label>
                     <select
                       value={gradeForm.studentId}
-                      onChange={(e) => setGradeForm({ ...gradeForm, studentId: e.target.value })}
+                      onChange={(e) => setGradeForm({ ...gradeForm, studentId: e.target.value, courseId: '' })}
                       className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                       required
                     >
@@ -332,19 +339,43 @@ export default function FacultyPage() {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Course <span className="text-red-500 dark:text-red-400">*</span>
                     </label>
-                    <select
-                      value={gradeForm.courseId}
-                      onChange={(e) => setGradeForm({ ...gradeForm, courseId: e.target.value })}
-                      className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
-                      required
-                    >
-                      <option value="">Choose a course...</option>
-                      {courses.map(course => (
-                        <option key={course.id} value={course.id}>
-                          {course.code} - {course.name}
-                        </option>
-                      ))}
-                    </select>
+                    {(() => {
+                      const selectedStudent = students.find(s => s.id === gradeForm.studentId);
+                      const enrolledCourses = selectedStudent
+                        ? courses.filter(c => selectedStudent.enrolledCourses.includes(c.id))
+                        : [];
+                      return (
+                        <select
+                          value={gradeForm.courseId}
+                          onChange={(e) => setGradeForm({ ...gradeForm, courseId: e.target.value })}
+                          className={`w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 ${
+                            !gradeForm.studentId ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
+                          disabled={!gradeForm.studentId}
+                          required
+                        >
+                          <option value="">
+                            {gradeForm.studentId ? 'Choose a course...' : 'Select a student first'}
+                          </option>
+                          {enrolledCourses.map(course => (
+                            <option key={course.id} value={course.id}>
+                              {course.code} - {course.name}
+                            </option>
+                          ))}
+                        </select>
+                      );
+                    })()}
+                    {gradeForm.studentId && (() => {
+                      const selectedStudent = students.find(s => s.id === gradeForm.studentId);
+                      const count = selectedStudent
+                        ? courses.filter(c => selectedStudent.enrolledCourses.includes(c.id)).length
+                        : 0;
+                      return (
+                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                          {count} enrolled course{count !== 1 ? 's' : ''}
+                        </p>
+                      );
+                    })()}
                   </div>
 
                   <div>
@@ -495,6 +526,12 @@ export default function FacultyPage() {
           isOpen={gradeSuccessOpen}
           message={gradeSuccessMessage}
           onClose={() => setGradeSuccessOpen(false)}
+        />
+        <SuccessModal
+          isOpen={assignSuccessOpen}
+          title="Students Assigned"
+          message={assignSuccessMessage}
+          onClose={() => setAssignSuccessOpen(false)}
         />
     </div>
   );
