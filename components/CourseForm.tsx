@@ -237,17 +237,7 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
             ))}
           </CommonSelect>
 
-          <CommonSelect
-            label="Credits"
-            required
-            value={formData.credits}
-            onChange={(e) => setFormData({ ...formData, credits: Number(e.target.value) })}
-            error={errors.credits}
-          >
-            {[1, 2, 3, 4, 5, 6].map((n) => (
-              <option key={n} value={n}>{n} Credit{n > 1 ? 's' : ''}</option>
-            ))}
-          </CommonSemester
+          <CommonSemester
             label="Semester"
             required
             value={formData.semester}
