@@ -376,7 +376,7 @@ export default function StudentProfilePage() {
                             )}
                         </CommonSelect>
                         {enrolledCourses.length === 0 && (
-                            <p className="text-xs text-amber-500 dark:text-amber-400 -mt-2">
+                            <p className="-mt-2 text-xs text-amber-500 dark:text-amber-400">
                                 This student has no enrolled courses. Enroll them first to add grades.
                             </p>
                         )}
