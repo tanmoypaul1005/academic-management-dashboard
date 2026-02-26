@@ -1,12 +1,11 @@
-import { grades, saveData } from '../../data';
-import { Grade } from '@/types';
+import { getGradeById, updateGrade, deleteGrade } from '../../data';
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const grade = grades.find((g: Grade) => g.id === id);
+  const grade = await getGradeById(id);
   if (!grade) {
     return Response.json({ error: 'Grade not found' }, { status: 404 });
   }
@@ -19,15 +18,11 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const data = await request.json();
-  const index = grades.findIndex((g: Grade) => g.id === id);
-  
-  if (index === -1) {
+  const updated = await updateGrade(id, data);
+  if (!updated) {
     return Response.json({ error: 'Grade not found' }, { status: 404 });
   }
-  
-  grades[index] = { ...grades[index], ...data };
-  saveData();
-  return Response.json(grades[index]);
+  return Response.json(updated);
 }
 
 export async function DELETE(
@@ -35,13 +30,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const index = grades.findIndex((g: Grade) => g.id === id);
-  
-  if (index === -1) {
+  const ok = await deleteGrade(id);
+  if (!ok) {
     return Response.json({ error: 'Grade not found' }, { status: 404 });
   }
-  
-  grades.splice(index, 1);
-  saveData();
   return Response.json({ success: true });
 }

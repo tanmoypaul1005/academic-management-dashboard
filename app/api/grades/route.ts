@@ -1,22 +1,13 @@
 import { Grade } from '@/types';
-import { grades, saveData } from '../data';
+import { getGrades, createGrade } from '../data';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const studentId = searchParams.get('studentId');
-  const courseId = searchParams.get('courseId');
-  
-  let filteredGrades = grades;
-  
-  if (studentId) {
-    filteredGrades = filteredGrades.filter(g => g.studentId === studentId);
-  }
-  
-  if (courseId) {
-    filteredGrades = filteredGrades.filter(g => g.courseId === courseId);
-  }
-  
-  return Response.json(filteredGrades);
+  const studentId = searchParams.get('studentId') ?? undefined;
+  const courseId = searchParams.get('courseId') ?? undefined;
+
+  const result = await getGrades({ studentId, courseId });
+  return Response.json(result);
 }
 
 export async function POST(request: Request) {
@@ -25,7 +16,6 @@ export async function POST(request: Request) {
     ...data,
     id: Date.now().toString(),
   };
-  grades.push(newGrade);
-  saveData();
-  return Response.json(newGrade, { status: 201 });
+  const saved = await createGrade(newGrade);
+  return Response.json(saved, { status: 201 });
 }

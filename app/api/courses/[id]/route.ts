@@ -1,12 +1,11 @@
-import { courses, saveData } from '../../data';
-import { Course } from '@/types';
+import { getCourseById, updateCourse, deleteCourse } from '../../data';
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const course = courses.find((c: Course) => c.id === id);
+  const course = await getCourseById(id);
   if (!course) {
     return Response.json({ error: 'Course not found' }, { status: 404 });
   }
@@ -19,15 +18,11 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const data = await request.json();
-  const index = courses.findIndex((c: Course) => c.id === id);
-  
-  if (index === -1) {
+  const updated = await updateCourse(id, data);
+  if (!updated) {
     return Response.json({ error: 'Course not found' }, { status: 404 });
   }
-  
-  courses[index] = { ...courses[index], ...data };
-  saveData();
-  return Response.json(courses[index]);
+  return Response.json(updated);
 }
 
 export async function DELETE(
@@ -35,13 +30,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const index = courses.findIndex((c: Course) => c.id === id);
-  
-  if (index === -1) {
+  const ok = await deleteCourse(id);
+  if (!ok) {
     return Response.json({ error: 'Course not found' }, { status: 404 });
   }
-  
-  courses.splice(index, 1);
-  saveData();
   return Response.json({ success: true });
 }

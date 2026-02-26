@@ -1,12 +1,11 @@
-import { faculty } from '../../data';
-import { Faculty } from '@/types';
+import { getFacultyById, updateFaculty, deleteFaculty } from '../../data';
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const member = faculty.find((f: Faculty) => f.id === id);
+  const member = await getFacultyById(id);
   if (!member) {
     return Response.json({ error: 'Faculty not found' }, { status: 404 });
   }
@@ -19,14 +18,11 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const data = await request.json();
-  const index = faculty.findIndex((f: Faculty) => f.id === id);
-  
-  if (index === -1) {
+  const updated = await updateFaculty(id, data);
+  if (!updated) {
     return Response.json({ error: 'Faculty not found' }, { status: 404 });
   }
-  
-  faculty[index] = { ...faculty[index], ...data };
-  return Response.json(faculty[index]);
+  return Response.json(updated);
 }
 
 export async function DELETE(
@@ -34,12 +30,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const index = faculty.findIndex((f: Faculty) => f.id === id);
-  
-  if (index === -1) {
+  const ok = await deleteFaculty(id);
+  if (!ok) {
     return Response.json({ error: 'Faculty not found' }, { status: 404 });
   }
-  
-  faculty.splice(index, 1);
   return Response.json({ success: true });
 }

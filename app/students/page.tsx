@@ -95,7 +95,7 @@ export default function StudentsPage() {
         return () => {
             mounted = false;
         };
-    }, [currentPage, searchTerm, selectedYear, selectedMajor, selectedCourse]);
+    }, [currentPage, searchTerm, selectedYear, selectedMajor, selectedCourse, students]);
 
 
     async function handleConfirmDelete() {

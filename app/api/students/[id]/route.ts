@@ -1,12 +1,11 @@
-import { students, saveData } from '../../data';
-import { Student } from '@/types';
+import { getStudentById, updateStudent, deleteStudent } from '../../data';
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const student = students.find((s: Student) => s.id === id);
+  const student = await getStudentById(id);
   if (!student) {
     return Response.json({ error: 'Student not found' }, { status: 404 });
   }
@@ -19,15 +18,11 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const data = await request.json();
-  const index = students.findIndex((s: Student) => s.id === id);
-  
-  if (index === -1) {
+  const updated = await updateStudent(id, data);
+  if (!updated) {
     return Response.json({ error: 'Student not found' }, { status: 404 });
   }
-  
-  students[index] = { ...students[index], ...data };
-  saveData();
-  return Response.json(students[index]);
+  return Response.json(updated);
 }
 
 export async function DELETE(
@@ -35,13 +30,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const index = students.findIndex((s: Student) => s.id === id);
-  
-  if (index === -1) {
+  const ok = await deleteStudent(id);
+  if (!ok) {
     return Response.json({ error: 'Student not found' }, { status: 404 });
   }
-  
-  students.splice(index, 1);
-  saveData();
   return Response.json({ success: true });
 }

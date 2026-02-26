@@ -22,11 +22,20 @@ const api = axios.create({
 // Students API
 export const studentsApi = {
   getAll: async (): Promise<Student[]> => {
-    const response = await api.get('/students');
-    const payload = response.data;
-    // Handle paginated or plain responses
+    // Fetch all pages to get the complete list
+    const first = await api.get('/students?page=1&limit=100');
+    const payload = first.data;
     if (Array.isArray(payload)) return payload;
-    if (payload && Array.isArray(payload.data)) return payload.data;
+    if (payload && Array.isArray(payload.data)) {
+      const { data, totalPages } = payload;
+      if (!totalPages || totalPages <= 1) return data;
+      const rest = await Promise.all(
+        Array.from({ length: totalPages - 1 }, (_, i) =>
+          api.get(`/students?page=${i + 2}&limit=100`).then(r => r.data?.data ?? [])
+        )
+      );
+      return [...data, ...rest.flat()];
+    }
     return [];
   },
   getById: async (id: string): Promise<Student> => {
@@ -57,10 +66,19 @@ export const studentsApi = {
 // Courses API
 export const coursesApi = {
   getAll: async (): Promise<Course[]> => {
-    const response = await api.get('/courses');
-    const payload = response.data;
+    const first = await api.get('/courses?page=1&limit=100');
+    const payload = first.data;
     if (Array.isArray(payload)) return payload;
-    if (payload && Array.isArray(payload.data)) return payload.data;
+    if (payload && Array.isArray(payload.data)) {
+      const { data, totalPages } = payload;
+      if (!totalPages || totalPages <= 1) return data;
+      const rest = await Promise.all(
+        Array.from({ length: totalPages - 1 }, (_, i) =>
+          api.get(`/courses?page=${i + 2}&limit=100`).then(r => r.data?.data ?? [])
+        )
+      );
+      return [...data, ...rest.flat()];
+    }
     return [];
   },
   getById: async (id: string): Promise<Course> => {

@@ -1,8 +1,9 @@
 import { Faculty } from '@/types';
-import { faculty } from '../data';
+import { getFaculty, createFaculty } from '../data';
 
 export async function GET() {
-  return Response.json(faculty);
+  const all = await getFaculty();
+  return Response.json(all);
 }
 
 export async function POST(request: Request) {
@@ -11,6 +12,6 @@ export async function POST(request: Request) {
     ...data,
     id: Date.now().toString(),
   };
-  faculty.push(newFaculty);
-  return Response.json(newFaculty, { status: 201 });
+  const saved = await createFaculty(newFaculty);
+  return Response.json(saved, { status: 201 });
 }

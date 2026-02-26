@@ -137,7 +137,7 @@ export default function CoursesPage() {
         return () => {
             mounted = false;
         };
-    }, [currentPage, searchTerm, selectedDepartment]);
+    }, [currentPage, searchTerm, selectedDepartment, courses]);
 
     const filteredCourses = filterCourses(courses, searchTerm, selectedDepartment);
     const uniqueDepartments = getUniqueDepartments(courses);
