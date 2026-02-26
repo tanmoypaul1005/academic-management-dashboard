@@ -17,6 +17,9 @@ export interface Course {
   facultyIds: string[];
   enrollmentCount: number;
   semester: string;
+  description?: string;
+  prerequisites?: string[];
+  metadata?: Record<string, string>;
 }
 
 export interface Faculty {
@@ -60,6 +63,9 @@ export interface CourseFormData {
   facultyIds: string[];
   semester: string;
   enrollmentCount?: number;
+  description?: string;
+  prerequisites?: string[];
+  metadata?: Record<string, string>;
 }
 
 export interface GradeFormData {
