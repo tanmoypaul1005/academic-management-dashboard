@@ -105,7 +105,11 @@ export default function StudentProfilePage() {
         );
     }
 
-    const enrolledCourses = courses.filter(c => student.enrolledCourses.includes(c.id));
+    // Deduplicate courses list (guard against duplicate DB documents)
+    // and deduplicate the student's enrolledCourses array (guard against duplicate IDs)
+    const uniqueCourses = courses.filter((c, idx, self) => self.findIndex(x => x.id === c.id) === idx);
+    const uniqueEnrolledIds = [...new Set(student.enrolledCourses)];
+    const enrolledCourses = uniqueCourses.filter(c => uniqueEnrolledIds.includes(c.id));
     const progress = calculateStudentProgress(grades);
 
     function openAddGrade() {

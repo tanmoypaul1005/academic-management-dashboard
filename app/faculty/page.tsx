@@ -78,12 +78,12 @@ export default function FacultyPage() {
     }
 
     try {
-      // Update each student's enrolled courses
+      // Fetch fresh student data from DB before updating to avoid stale-state duplicates
       for (const studentId of selectedStudents) {
-        const student = students.find(s => s.id === studentId);
-        if (student && !student.enrolledCourses.includes(selectedCourse)) {
+        const freshStudent = await studentsApi.getById(studentId);
+        if (freshStudent && !freshStudent.enrolledCourses.includes(selectedCourse)) {
           await studentsApi.update(studentId, {
-            enrolledCourses: [...student.enrolledCourses, selectedCourse],
+            enrolledCourses: [...new Set([...freshStudent.enrolledCourses, selectedCourse])],
           });
         }
       }
@@ -152,18 +152,19 @@ export default function FacultyPage() {
 
     try {
       for (const studentId of bulkStudents) {
-        const student = students.find(s => s.id === studentId);
-        if (!student) continue;
+        // Fetch fresh student from DB to avoid stale-state duplicates
+        const freshStudent = await studentsApi.getById(studentId);
+        if (!freshStudent) continue;
 
         if (bulkAction === 'enroll') {
-          if (!student.enrolledCourses.includes(bulkCourse)) {
+          if (!freshStudent.enrolledCourses.includes(bulkCourse)) {
             await studentsApi.update(studentId, {
-              enrolledCourses: [...student.enrolledCourses, bulkCourse],
+              enrolledCourses: [...new Set([...freshStudent.enrolledCourses, bulkCourse])],
             });
           }
         } else {
           await studentsApi.update(studentId, {
-            enrolledCourses: student.enrolledCourses.filter(id => id !== bulkCourse),
+            enrolledCourses: freshStudent.enrolledCourses.filter(id => id !== bulkCourse),
           });
         }
       }
