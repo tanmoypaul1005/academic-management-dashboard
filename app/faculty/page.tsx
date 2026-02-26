@@ -7,6 +7,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
 import CommonSelect from '@/components/CommonSelect';
 import GradeSuccessModal from '@/components/GradeSuccessModal';
+import SuccessModal from '@/components/SuccessModal';
 
 export default function FacultyPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -28,6 +29,10 @@ export default function FacultyPage() {
   });
   const [gradeSuccessOpen, setGradeSuccessOpen] = useState(false);
   const [gradeSuccessMessage, setGradeSuccessMessage] = useState('');
+
+  // Assign success modal
+  const [assignSuccessOpen, setAssignSuccessOpen] = useState(false);
+  const [assignSuccessMessage, setAssignSuccessMessage] = useState('');
 
   const SEMESTER_OPTIONS = [
     'Fall 2026',
@@ -99,7 +104,8 @@ export default function FacultyPage() {
         });
       }
 
-      alert('Students assigned successfully!');
+      setAssignSuccessMessage(`${selectedStudents.length} student(s) successfully assigned to the course!`);
+      setAssignSuccessOpen(true);
       setSelectedStudents([]);
       fetchData();
     } catch (error) {
@@ -496,6 +502,12 @@ export default function FacultyPage() {
           isOpen={gradeSuccessOpen}
           message={gradeSuccessMessage}
           onClose={() => setGradeSuccessOpen(false)}
+        />
+        <SuccessModal
+          isOpen={assignSuccessOpen}
+          title="Students Assigned"
+          message={assignSuccessMessage}
+          onClose={() => setAssignSuccessOpen(false)}
         />
     </div>
   );
