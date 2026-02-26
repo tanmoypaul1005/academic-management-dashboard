@@ -244,19 +244,6 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
             onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
             error={errors.semester}
           />
-
-          <div className="md:col-span-2">
-            <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-              Description
-            </label>
-            <textarea
-              rows={3}
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Short overview of this course..."
-              className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg resize-none dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
         </div>
       </div>
 
