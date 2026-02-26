@@ -366,12 +366,13 @@ export default function CoursesPage() {
                 title="Add New Course"
                 size="lg"
             >
-                <CourseForm mode="create" onSuccess={handleAddSuccess} />
+                <CourseForm mode="create" facultyList={faculty} onSuccess={handleAddSuccess} />
             </CommonModal>
             {/* Edit Course Modal */}
             <CourseEditModal
                 isOpen={showEditModal}
                 course={editTarget}
+                facultyList={faculty}
                 onClose={() => { setShowEditModal(false); setEditTarget(null); }}
                 onSuccess={handleEditSuccess}
             />

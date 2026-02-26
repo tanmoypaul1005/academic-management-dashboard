@@ -11,6 +11,7 @@ interface CourseFormProps {
   course?: Course;
   mode: 'create' | 'edit';
   onSuccess?: (course?: Course) => void;
+  facultyList?: Faculty[];
 }
 
 const DEPARTMENT_OPTIONS = [
@@ -44,10 +45,10 @@ function entriesToMeta(entries: MetaEntry[]): Record<string, string> {
   return result;
 }
 
-export default function CourseForm({ course, mode, onSuccess }: CourseFormProps) {
+export default function CourseForm({ course, mode, onSuccess, facultyList }: CourseFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [faculty, setFaculty] = useState<Faculty[]>([]);
+  const [faculty, setFaculty] = useState<Faculty[]>(facultyList ?? []);
 
   const [formData, setFormData] = useState<CourseFormData>({
     name: course?.name || '',
@@ -71,10 +72,14 @@ export default function CourseForm({ course, mode, onSuccess }: CourseFormProps)
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
+    if (facultyList && facultyList.length > 0) {
+      setFaculty(facultyList);
+      return;
+    }
     facultyApi.getAll()
-      .then(setFaculty)
+      .then((data) => { if (data.length > 0) setFaculty(data); })
       .catch((e) => console.error('Error fetching faculty:', e));
-  }, []);
+  }, [facultyList]);
 
   //  Validation 
   function validate(): boolean {
