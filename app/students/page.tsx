@@ -382,6 +382,16 @@ export default function StudentsPage() {
                                             >
                                                 Edit
                                             </button>
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setConfirmTargetId(student.id);
+                                                        setShowConfirm(true);
+                                                    }}
+                                                    className="text-red-600 cursor-pointer dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors"
+                                                >
+                                                    Delete
+                                                </button>
                                         </td>
                                     </tr>
                                 ))}

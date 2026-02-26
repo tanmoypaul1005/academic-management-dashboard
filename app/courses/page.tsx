@@ -310,6 +310,16 @@ export default function CoursesPage() {
                                             >
                                                 Edit
                                             </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setConfirmTargetId(course.id);
+                                                    setShowConfirm(true);
+                                                }}
+                                                className="text-red-600 dark:text-red-400"
+                                            >
+                                                Delete
+                                            </button>
 
                                         </td>
                                     </tr>
