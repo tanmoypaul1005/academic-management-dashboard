@@ -6,6 +6,7 @@ import { Course, Faculty, CourseFormData } from '@/types';
 import { coursesApi, facultyApi } from '@/lib/api';
 import CommonInput from './CommonInput';
 import CommonSelect from './CommonSelect';
+import CommonSemester from './CommonSemester';
 
 interface CourseFormProps {
   course?: Course;
@@ -246,15 +247,11 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <option key={n} value={n}>{n} Credit{n > 1 ? 's' : ''}</option>
             ))}
-          </CommonSelect>
-
-          <CommonInput
+          </CommonSemester
             label="Semester"
             required
-            type="text"
             value={formData.semester}
             onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
-            placeholder="e.g., Fall 2025"
             error={errors.semester}
           />
 
