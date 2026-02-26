@@ -322,7 +322,7 @@ export default function FacultyPage() {
                     </label>
                     <select
                       value={gradeForm.studentId}
-                      onChange={(e) => setGradeForm({ ...gradeForm, studentId: e.target.value })}
+                      onChange={(e) => setGradeForm({ ...gradeForm, studentId: e.target.value, courseId: '' })}
                       className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                       required
                     >
@@ -339,19 +339,43 @@ export default function FacultyPage() {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Course <span className="text-red-500 dark:text-red-400">*</span>
                     </label>
-                    <select
-                      value={gradeForm.courseId}
-                      onChange={(e) => setGradeForm({ ...gradeForm, courseId: e.target.value })}
-                      className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
-                      required
-                    >
-                      <option value="">Choose a course...</option>
-                      {courses.map(course => (
-                        <option key={course.id} value={course.id}>
-                          {course.code} - {course.name}
-                        </option>
-                      ))}
-                    </select>
+                    {(() => {
+                      const selectedStudent = students.find(s => s.id === gradeForm.studentId);
+                      const enrolledCourses = selectedStudent
+                        ? courses.filter(c => selectedStudent.enrolledCourses.includes(c.id))
+                        : [];
+                      return (
+                        <select
+                          value={gradeForm.courseId}
+                          onChange={(e) => setGradeForm({ ...gradeForm, courseId: e.target.value })}
+                          className={`w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 ${
+                            !gradeForm.studentId ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
+                          disabled={!gradeForm.studentId}
+                          required
+                        >
+                          <option value="">
+                            {gradeForm.studentId ? 'Choose a course...' : 'Select a student first'}
+                          </option>
+                          {enrolledCourses.map(course => (
+                            <option key={course.id} value={course.id}>
+                              {course.code} - {course.name}
+                            </option>
+                          ))}
+                        </select>
+                      );
+                    })()}
+                    {gradeForm.studentId && (() => {
+                      const selectedStudent = students.find(s => s.id === gradeForm.studentId);
+                      const count = selectedStudent
+                        ? courses.filter(c => selectedStudent.enrolledCourses.includes(c.id)).length
+                        : 0;
+                      return (
+                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                          {count} enrolled course{count !== 1 ? 's' : ''}
+                        </p>
+                      );
+                    })()}
                   </div>
 
                   <div>
