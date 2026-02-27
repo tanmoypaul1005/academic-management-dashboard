@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { studentsApi, coursesApi, gradesApi } from '@/lib/api';
 import { Student, Course, GradeFormData } from '@/types';
 import AnimatedSection from '@/components/AnimatedSection';
-import AnimatedCard from '@/components/AnimatedCard';
 import CommonSelect from '@/components/CommonSelect';
 import GradeSuccessModal from '@/components/GradeSuccessModal';
 import SuccessModal from '@/components/SuccessModal';
@@ -218,7 +217,7 @@ export default function FacultyPage() {
       </AnimatedSection>
 
       {/* Tabs */}
-      <AnimatedCard delay={0.1} className="bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
+      <div className="bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
         <div className="border-b border-gray-200 dark:border-slate-700">
           <nav className="flex -mb-px overflow-x-auto">
             <button
@@ -530,7 +529,7 @@ export default function FacultyPage() {
             </AnimatedSection>
           )}
         </div>
-      </AnimatedCard>
+      </div>
         <GradeSuccessModal
           isOpen={gradeSuccessOpen}
           message={gradeSuccessMessage}

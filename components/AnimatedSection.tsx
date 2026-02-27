@@ -15,7 +15,7 @@ export default function AnimatedSection({
   children,
   animation = 'fadeIn',
   delay = 0,
-  duration = 0.6,
+  duration = 0.9,
   className = '',
 }: AnimatedSectionProps) {
   const elementRef = useRef<HTMLDivElement>(null);
@@ -24,31 +24,32 @@ export default function AnimatedSection({
     const element = elementRef.current;
     if (!element) return;
 
-    const animations = {
-      fadeIn: { opacity: 0, y: 0 },
-      slideUp: { opacity: 0, y: 50 },
-      slideLeft: { opacity: 0, x: -50 },
-      slideRight: { opacity: 0, x: 50 },
-      scale: { opacity: 0, scale: 0.8 },
-    };
+    const fromVars: gsap.TweenVars = {
+      fadeIn:    { opacity: 0, y: 0 },
+      slideUp:   { opacity: 0, y: 14 },
+      slideLeft: { opacity: 0, x: -16 },
+      slideRight:{ opacity: 0, x: 16 },
+      scale:     { opacity: 0, scale: 0.97 },
+    }[animation];
 
-    gsap.fromTo(
-      element,
-      animations[animation],
-      {
-        opacity: 1,
-        y: 0,
-        x: 0,
-        scale: 1,
-        duration,
-        delay,
-        ease: 'power3.out',
-      }
-    );
+    // Set initial state synchronously before first paint so there's no flash
+    gsap.set(element, fromVars);
+
+    gsap.to(element, {
+      opacity: 1,
+      y: 0,
+      x: 0,
+      scale: 1,
+      duration,
+      delay,
+      ease: 'sine.out',
+      force3D: true,
+      clearProps: 'will-change',
+    });
   }, [animation, delay, duration]);
 
   return (
-    <div ref={elementRef} className={className}>
+    <div ref={elementRef} className={className} style={{ opacity: 0 }}>
       {children}
     </div>
   );
