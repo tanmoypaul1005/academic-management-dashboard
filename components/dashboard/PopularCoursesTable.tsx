@@ -51,7 +51,7 @@ export default function PopularCoursesTable({ courses }: PopularCoursesTableProp
               ].map(({ label, className }) => (
                 <th
                   key={label}
-                  className={`pb-3 font-medium text-gray-600 dark:text-gray-400 ${className}`}
+                  className={`pb-3 px-3 font-medium text-gray-600 dark:text-gray-400 ${className}`}
                 >
                   {label}
                 </th>
@@ -62,16 +62,16 @@ export default function PopularCoursesTable({ courses }: PopularCoursesTableProp
             {courses.map((course) => (
               <tr
                 key={course.id}
-                className="transition-colors border-b border-gray-200 dark:border-slate-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-slate-700/50"
+                className="transition-colors border-b border-gray-200 rounded-lg group dark:border-slate-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-slate-700/50"
               >
-                <td className="py-3 whitespace-nowrap">
+                <td className="px-3 py-3 rounded-l-lg whitespace-nowrap">
                   <span className="font-mono font-medium text-blue-600 dark:text-blue-400">
                     {course.code}
                   </span>
                 </td>
-                <td className="py-3 font-medium text-gray-900 dark:text-white">{course.name}</td>
-                <td className="py-3 text-gray-600 dark:text-gray-400">{course.department}</td>
-                <td className="py-3 text-right">
+                <td className="px-3 py-3 font-medium text-gray-900 dark:text-white">{course.name}</td>
+                <td className="px-3 py-3 text-gray-600 dark:text-gray-400">{course.department}</td>
+                <td className="px-3 py-3 text-right rounded-r-lg">
                   <Badge variant="blue">{course.enrollmentCount}</Badge>
                 </td>
               </tr>
