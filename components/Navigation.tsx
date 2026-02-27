@@ -140,23 +140,7 @@ export default function Navigation() {
             })}
           </ul>
         </nav>
-
-        {/* Footer */}
-        <div className="px-4 py-4 border-t border-white/10">
-          <div
-            className="flex items-center gap-3 px-3 py-3 rounded-xl"
-            style={{ background: 'rgba(255,255,255,0.07)' }}
-          >
-            <div className="flex items-center justify-center text-sm font-bold text-white rounded-full shadow w-9 h-9 bg-gradient-to-br from-indigo-400 to-blue-500">
-              A
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-white truncate">Admin User</p>
-              <p className="text-xs text-indigo-300 truncate">Administrator</p>
-            </div>
-            <span className="flex-shrink-0 w-2 h-2 ml-auto rounded-full bg-emerald-400" title="Online" />
-          </div>
-        </div>
+    
       </aside>
     </>
   );

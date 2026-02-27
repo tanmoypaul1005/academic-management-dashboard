@@ -20,19 +20,19 @@ export default function AnimatedCard({
     const card = cardRef.current;
     if (!card) return;
 
-    // Initial animation
-    gsap.fromTo(
-      card,
-      { opacity: 0, y: 30, scale: 0.95 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.5,
-        delay,
-        ease: 'power2.out',
-      }
-    );
+    // Set initial state synchronously — prevents the flash-then-snap jitter
+    gsap.set(card, { opacity: 0, y: 10 });
+
+    // Entrance animation — no scale to avoid compound jitter
+    gsap.to(card, {
+      opacity: 1,
+      y: 0,
+      duration: 0.85,
+      delay,
+      ease: 'sine.out',
+      force3D: true,
+      clearProps: 'will-change',
+    });
 
     // Hover effect
     const onMouseEnter = () => {

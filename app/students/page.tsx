@@ -19,6 +19,7 @@ export default function StudentsPage() {
     const [students, setStudents] = useState<Student[]>([]);
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
+    const [ready, setReady] = useState(false);  // true only after first full page load
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedYear, setSelectedYear] = useState<number | undefined>();
     const [selectedMajor, setSelectedMajor] = useState<string>('');
@@ -95,7 +96,10 @@ export default function StudentsPage() {
             } catch (error) {
                 console.error('Error loading students page:', error);
             } finally {
-                if (mounted) setLoading(false);
+                if (mounted) {
+                    setLoading(false);
+                    setReady(true); // page now has real data — safe to start animations
+                }
             }
         }
         loadPage();
@@ -217,7 +221,8 @@ export default function StudentsPage() {
         return range;
     }
 
-    if (loading) {
+    // Keep spinner until the first loadPage completes — prevents empty-table animation jump
+    if (!ready) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin"></div>

@@ -20,6 +20,7 @@ export default function CoursesPage() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [faculty, setFaculty] = useState<Faculty[]>([]);
     const [loading, setLoading] = useState(true);
+    const [ready, setReady] = useState(false);  // true only after first full page load
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDepartment, setSelectedDepartment] = useState<string>('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -158,7 +159,10 @@ export default function CoursesPage() {
             } catch (error) {
                 console.error('Error loading courses page:', error);
             } finally {
-                if (mounted) setLoading(false);
+                if (mounted) {
+                    setLoading(false);
+                    setReady(true); // page now has real data — safe to start animations
+                }
             }
         }
         loadPage();
@@ -201,7 +205,8 @@ export default function CoursesPage() {
         return range;
     }
 
-    if (loading) {
+    // Keep spinner until the first loadPage completes — prevents empty-table animation jump
+    if (!ready) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin"></div>
