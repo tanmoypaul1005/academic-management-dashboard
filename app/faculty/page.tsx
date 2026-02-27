@@ -8,6 +8,7 @@ import AnimatedCard from '@/components/AnimatedCard';
 import CommonSelect from '@/components/CommonSelect';
 import GradeSuccessModal from '@/components/GradeSuccessModal';
 import SuccessModal from '@/components/SuccessModal';
+import BulkSuccessModal from '@/components/BulkSuccessModal';
 
 export default function FacultyPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -56,6 +57,9 @@ export default function FacultyPage() {
   const [bulkAction, setBulkAction] = useState<'enroll' | 'unenroll'>('enroll');
   const [bulkCourse, setBulkCourse] = useState<string>('');
   const [bulkStudents, setBulkStudents] = useState<string[]>([]);
+  const [bulkSuccessOpen, setBulkSuccessOpen] = useState(false);
+  const [bulkSuccessCount, setBulkSuccessCount] = useState(0);
+  const [bulkSuccessAction, setBulkSuccessAction] = useState<'enroll' | 'unenroll'>('enroll');
 
   useEffect(() => {
     fetchData();
@@ -184,7 +188,12 @@ export default function FacultyPage() {
         enrollmentCount: newEnrollmentCount,
       });
 
-      alert(`Bulk ${bulkAction === 'enroll' ? 'enrollment' : 'unenrollment'} successful!`);
+      setBulkSuccessCount(bulkStudents.length);
+      setBulkSuccessAction(bulkAction);
+      setBulkSuccessOpen(true);
+      // Reset form
+      setBulkAction('enroll');
+      setBulkCourse('');
       setBulkStudents([]);
       fetchData();
     } catch (error) {
@@ -196,7 +205,7 @@ export default function FacultyPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
+        <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin dark:border-blue-400"></div>
       </div>
     );
   }
@@ -204,12 +213,12 @@ export default function FacultyPage() {
   return (
     <div className="space-y-6">
       <AnimatedSection animation="fadeIn">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Faculty Panel</h1>
+        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">Faculty Panel</h1>
         <p className="text-gray-600 dark:text-gray-400">Manage student assignments and grades</p>
       </AnimatedSection>
 
       {/* Tabs */}
-      <AnimatedCard delay={0.1} className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700">
+      <AnimatedCard delay={0.1} className="bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
         <div className="border-b border-gray-200 dark:border-slate-700">
           <nav className="flex -mb-px overflow-x-auto">
             <button
@@ -253,13 +262,13 @@ export default function FacultyPage() {
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Assign Students to Course</h2>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Select Course
                   </label>
                   <select
                     value={selectedCourse}
                     onChange={(e) => setSelectedCourse(e.target.value)}
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:bg-slate-700 dark:text-white dark:border-slate-600 focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Choose a course...</option>
                     {courses.map(course => (
@@ -271,12 +280,12 @@ export default function FacultyPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Select Students
                   </label>
-                  <div className="border border-gray-300 dark:border-slate-600 rounded-lg p-4 max-h-80 overflow-y-auto bg-white dark:bg-slate-700">
+                  <div className="p-4 overflow-y-auto bg-white border border-gray-300 rounded-lg dark:border-slate-600 max-h-80 dark:bg-slate-700">
                     {students.map(student => (
-                      <label key={student.id} className="flex items-center p-2 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded cursor-pointer">
+                      <label key={student.id} className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50">
                         <input
                           type="checkbox"
                           checked={selectedStudents.includes(student.id)}
@@ -287,11 +296,11 @@ export default function FacultyPage() {
                               setSelectedStudents(selectedStudents.filter(id => id !== student.id));
                             }
                           }}
-                          className="mr-3 h-4 w-4 text-blue-600 dark:text-blue-400 rounded"
+                          className="w-4 h-4 mr-3 text-blue-600 rounded dark:text-blue-400"
                         />
                         <div className="flex-1">
                           <span className="font-medium text-gray-900 dark:text-white">{student.name}</span>
-                          <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">({student.major})</span>
+                          <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">({student.major})</span>
                         </div>
                       </label>
                     ))}
@@ -301,7 +310,7 @@ export default function FacultyPage() {
 
                 <button
                   onClick={handleAssignStudent}
-                  className="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                  className="px-6 py-2 text-white transition-colors bg-blue-600 rounded-lg dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600"
                 >
                   Assign Students
                 </button>
@@ -315,15 +324,15 @@ export default function FacultyPage() {
               <form onSubmit={handleAddGrade} className="space-y-6">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add/Update Student Grade</h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                       Student <span className="text-red-500 dark:text-red-400">*</span>
                     </label>
                     <select
                       value={gradeForm.studentId}
                       onChange={(e) => setGradeForm({ ...gradeForm, studentId: e.target.value, courseId: '' })}
-                      className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:bg-slate-700 dark:text-white dark:border-slate-600 focus:ring-2 focus:ring-blue-500"
                       required
                     >
                       <option value="">Choose a student...</option>
@@ -336,7 +345,7 @@ export default function FacultyPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                       Course <span className="text-red-500 dark:text-red-400">*</span>
                     </label>
                     {(() => {
@@ -379,13 +388,13 @@ export default function FacultyPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                       Letter Grade <span className="text-red-500 dark:text-red-400">*</span>
                     </label>
                     <select
                       value={gradeForm.grade}
                       onChange={(e) => setGradeForm({ ...gradeForm, grade: e.target.value })}
-                      className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:bg-slate-700 dark:text-white dark:border-slate-600 focus:ring-2 focus:ring-blue-500"
                       required
                     >
                       <option value="">Select grade...</option>
@@ -403,7 +412,7 @@ export default function FacultyPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                       Numeric Grade (%) <span className="text-red-500 dark:text-red-400">*</span>
                     </label>
                     <input
@@ -412,7 +421,7 @@ export default function FacultyPage() {
                       max="100"
                       value={gradeForm.numericGrade}
                       onChange={(e) => setGradeForm({ ...gradeForm, numericGrade: parseFloat(e.target.value) })}
-                      className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:bg-slate-700 dark:text-white dark:border-slate-600 focus:ring-2 focus:ring-blue-500"
                       required
                     />
                   </div>
@@ -434,7 +443,7 @@ export default function FacultyPage() {
 
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                  className="px-6 py-2 text-white transition-colors bg-blue-600 rounded-lg dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600"
                 >
                   Add Grade
                 </button>
@@ -449,13 +458,13 @@ export default function FacultyPage() {
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Bulk Student Operations</h2>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Action Type
                   </label>
                   <select
                     value={bulkAction}
                     onChange={(e) => setBulkAction(e.target.value as 'enroll' | 'unenroll')}
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:bg-slate-700 dark:text-white dark:border-slate-600 focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="enroll">Enroll Students</option>
                     <option value="unenroll">Unenroll Students</option>
@@ -463,13 +472,13 @@ export default function FacultyPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Select Course
                   </label>
                   <select
                     value={bulkCourse}
                     onChange={(e) => setBulkCourse(e.target.value)}
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg dark:bg-slate-700 dark:text-white dark:border-slate-600 focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Choose a course...</option>
                     {courses.map(course => (
@@ -481,12 +490,12 @@ export default function FacultyPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Select Students (Multiple)
                   </label>
-                  <div className="border border-gray-300 dark:border-slate-600 rounded-lg p-4 max-h-80 overflow-y-auto bg-white dark:bg-slate-700">
+                  <div className="p-4 overflow-y-auto bg-white border border-gray-300 rounded-lg dark:border-slate-600 max-h-80 dark:bg-slate-700">
                     {students.map(student => (
-                      <label key={student.id} className="flex items-center p-2 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded cursor-pointer">
+                      <label key={student.id} className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50">
                         <input
                           type="checkbox"
                           checked={bulkStudents.includes(student.id)}
@@ -497,11 +506,11 @@ export default function FacultyPage() {
                               setBulkStudents(bulkStudents.filter(id => id !== student.id));
                             }
                           }}
-                          className="mr-3 h-4 w-4 text-blue-600 dark:text-blue-400 rounded"
+                          className="w-4 h-4 mr-3 text-blue-600 rounded dark:text-blue-400"
                         />
                         <div className="flex-1">
                           <span className="font-medium text-gray-900 dark:text-white">{student.name}</span>
-                          <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                          <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
                             ({student.enrolledCourses.length} courses enrolled)
                           </span>
                         </div>
@@ -513,7 +522,7 @@ export default function FacultyPage() {
 
                 <button
                   onClick={handleBulkOperation}
-                  className="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                  className="px-6 py-2 text-white transition-colors bg-blue-600 rounded-lg dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600"
                 >
                   Execute Bulk {bulkAction === 'enroll' ? 'Enrollment' : 'Unenrollment'}
                 </button>
@@ -532,6 +541,12 @@ export default function FacultyPage() {
           title="Students Assigned"
           message={assignSuccessMessage}
           onClose={() => setAssignSuccessOpen(false)}
+        />
+        <BulkSuccessModal
+          isOpen={bulkSuccessOpen}
+          action={bulkSuccessAction}
+          studentCount={bulkSuccessCount}
+          onClose={() => setBulkSuccessOpen(false)}
         />
     </div>
   );

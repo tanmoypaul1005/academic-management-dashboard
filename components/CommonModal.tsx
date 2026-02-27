@@ -104,7 +104,7 @@ export default function CommonModal({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleOverlayClick}
     >
       <div
@@ -118,7 +118,7 @@ export default function CommonModal({
           </h2>
           <button
             onClick={handleClose}
-            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-200"
+            className="p-2 text-gray-400 transition-all duration-200 rounded-lg cursor-pointer hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
             aria-label="Close modal"
           >
             <svg
@@ -136,7 +136,7 @@ export default function CommonModal({
         </div>
 
         {/* Modal Body */}
-        <div className="px-6 py-4 overflow-y-auto flex-1">
+        <div className="flex-1 px-6 py-4 overflow-y-auto">
           {children}
         </div>
       </div>
