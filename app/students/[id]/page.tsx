@@ -280,7 +280,7 @@ export default function StudentProfilePage() {
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white">Grades &amp; Progress</h2>
                         <button
                             onClick={openAddGrade}
-                            className="flex items-center gap-1 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="flex cursor-pointer items-center gap-1 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                         >
                             <Plus size={15} /> Add Grade
                         </button>
