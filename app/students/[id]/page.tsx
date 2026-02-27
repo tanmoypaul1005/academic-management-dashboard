@@ -387,6 +387,7 @@ export default function StudentProfilePage() {
                             required
                             value={gradeForm.semester}
                             onChange={(e) => setGradeForm({ ...gradeForm, semester: e.target.value })}
+                            error={gradeErrors.semester}
                             >
                             <option value="">Select Semester</option>
                             {SEMESTER_OPTIONS.map(s => (
