@@ -195,56 +195,50 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-8">
 
-      {/*  Basic Information  */}
-      <div>
-        <h3 className="mb-4 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">
-          Basic Information
-        </h3>
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 
-          <div className="md:col-span-2">
-            <CommonInput
-              label="Course Name"
-              required
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="e.g., Data Structures & Algorithms"
-              error={errors.name}
-            />
-          </div>
-
+        <div className="md:col-span-2">
           <CommonInput
-            label="Course Code"
+            label="Course Name"
             required
             type="text"
-            value={formData.code}
-            onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-            placeholder="e.g., CS301"
-            error={errors.code}
-          />
-
-          <CommonSelect
-            label="Department"
-            required
-            value={formData.department}
-            onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-            error={errors.department}
-          >
-            <option value="">Select Department</option>
-            {DEPARTMENT_OPTIONS.map((d) => (
-              <option key={d} value={d}>{d}</option>
-            ))}
-          </CommonSelect>
-
-          <CommonSemester
-            label="Semester"
-            required
-            value={formData.semester}
-            onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
-            error={errors.semester}
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="e.g., Data Structures & Algorithms"
+            error={errors.name}
           />
         </div>
+
+        <CommonInput
+          label="Course Code"
+          required
+          type="text"
+          value={formData.code}
+          onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
+          placeholder="e.g., CS301"
+          error={errors.code}
+        />
+
+        <CommonSelect
+          label="Department"
+          required
+          value={formData.department}
+          onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+          error={errors.department}
+        >
+          <option value="">Select Department</option>
+          {DEPARTMENT_OPTIONS.map((d) => (
+            <option key={d} value={d}>{d}</option>
+          ))}
+        </CommonSelect>
+
+        <CommonSemester
+          label="Semester"
+          required
+          value={formData.semester}
+          onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
+          error={errors.semester}
+        />
       </div>
 
       {/*  Assigned Instructors  */}
@@ -253,11 +247,10 @@ export default function CourseForm({ course, mode, onSuccess, facultyList }: Cou
           Assigned Instructors <span className="text-red-500">*</span>
         </h3>
         <div
-          className={`border rounded-lg p-4 max-h-56 overflow-y-auto bg-white dark:bg-slate-700 ${
-            errors.facultyIds
+          className={`border rounded-lg p-4 max-h-56 overflow-y-auto bg-white dark:bg-slate-700 ${errors.facultyIds
               ? 'border-red-500 dark:border-red-400'
               : 'border-gray-300 dark:border-slate-600'
-          }`}
+            }`}
         >
           {faculty.length === 0 ? (
             <p className="text-sm text-gray-500 dark:text-gray-400">No faculty members available</p>
