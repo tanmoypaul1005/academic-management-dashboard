@@ -338,7 +338,7 @@ export default function CoursesPage() {
                                             </span>
                                         </td>
                                         <td className="px-2 py-4 space-x-2 text-sm font-medium text-right">
-                                            <button>
+                                            <button className='cursor-pointer'>
                                                 <Link
                                                     href={`/courses/${course.id}`}
                                                     className="text-blue-600 dark:text-blue-400"
@@ -353,7 +353,7 @@ export default function CoursesPage() {
                                                     setEditTarget(course);
                                                     setShowEditModal(true);
                                                 }}
-                                                className="text-green-600 dark:text-green-400"
+                                                className="text-green-600 cursor-pointer dark:text-green-400"
                                             >
                                                 <EditIcon className="w-5 h-5" />
                                             </button>
@@ -363,7 +363,7 @@ export default function CoursesPage() {
                                                     setConfirmTargetId(course.id);
                                                     setShowConfirm(true);
                                                 }}
-                                                className="text-red-600 dark:text-red-400"
+                                                className="text-red-600 cursor-pointer dark:text-red-400"
                                             >
                                                 <Trash2 className="w-5 h-5" />
                                             </button>
