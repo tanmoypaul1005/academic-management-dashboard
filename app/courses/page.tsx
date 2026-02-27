@@ -9,12 +9,12 @@ import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
 import CommonModal from '@/components/CommonModal';
 import CourseForm from '@/components/CourseForm';
-import Pagination from '@/components/Pagination';
 import CourseEditModal from '@/components/CourseEditModal';
 import ConfirmModal from '@/components/ConfirmModal';
 import { useRouter } from 'next/navigation';
 import { EditIcon, Eye, Trash2 } from 'lucide-react';
 import CommonButton from '@/components/CommonButton';
+import CommonTable, { TableColumn } from '@/components/CommonTable';
 
 export default function CoursesPage() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -284,102 +284,67 @@ export default function CoursesPage() {
 
             {/* Courses Table */}
             <AnimatedSection animation="slideUp" delay={0.2}>
-                <div className="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="border-b border-gray-200 bg-gray-50 dark:bg-slate-700 dark:border-slate-700">
-                                <tr>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Course Code
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Course Name
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Department
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Credits
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Faculty
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Enrollments
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-right text-gray-500 uppercase dark:text-gray-400">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200 dark:divide-slate-700 ">
-                                {paginatedCourses.map((course) => (
-                                    <tr
-                                        onClick={() => router.push(`/courses/${course.id}`)}
-                                        key={course.id}
-                                        className={`cursor-pointer transition-all duration-500 ${deletingId === course.id
-                                                ? 'opacity-0 scale-95 bg-red-50 dark:bg-red-900/20'
-                                                : highlightId === course.id
-                                                    ? 'bg-green-50 dark:bg-green-900/20'
-                                                    : 'hover:bg-gray-50 dark:hover:bg-slate-700/50'
-                                            }`}>
-                                        <td className="px-6 py-4">
-                                            <span className="font-mono font-medium text-blue-600 dark:text-blue-400">{course.code}</span>
-                                        </td>
-                                        <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{course.name}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{course.department}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{course.credits}</td>
-                                        <td className="max-w-xs px-6 py-4 text-sm text-gray-600 truncate dark:text-gray-400">
-                                            {getFacultyNames(course.facultyIds)}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
-                                                {course.enrollmentCount}
-                                            </span>
-                                        </td>
-                                        <td className="px-2 py-4 space-x-2 text-sm font-medium text-right">
-                                            <button className='cursor-pointer'>
-                                                <Link
-                                                    href={`/courses/${course.id}`}
-                                                    className="text-blue-600 dark:text-blue-400"
-                                                >
-                                                    <Eye className="w-6 h-6" />
-                                                </Link>
-                                            </button>
-
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setEditTarget(course);
-                                                    setShowEditModal(true);
-                                                }}
-                                                className="text-green-600 cursor-pointer dark:text-green-400"
-                                            >
-                                                <EditIcon className="w-5 h-5" />
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setConfirmTargetId(course.id);
-                                                    setShowConfirm(true);
-                                                }}
-                                                className="text-red-600 cursor-pointer dark:text-red-400"
-                                            >
-                                                <Trash2 className="w-5 h-5" />
-                                            </button>
-
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                        <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
+                <CommonTable
+                    columns={[
+                        { label: 'Course Code' },
+                        { label: 'Course Name' },
+                        { label: 'Department' },
+                        { label: 'Credits' },
+                        { label: 'Faculty' },
+                        { label: 'Enrollments' },
+                        { label: 'Actions', className: 'text-right' },
+                    ] satisfies TableColumn[]}
+                    rows={paginatedCourses}
+                    onRowClick={(course) => router.push(`/courses/${course.id}`)}
+                    getRowClassName={(course) =>
+                        deletingId === course.id
+                            ? 'opacity-0 scale-95 bg-red-50 dark:bg-red-900/20'
+                            : highlightId === course.id
+                                ? 'bg-green-50 dark:bg-green-900/20'
+                                : 'hover:bg-gray-50 dark:hover:bg-slate-700/50'
+                    }
+                    renderRow={(course) => (
+                        <>
+                            <td className="px-6 py-4">
+                                <span className="font-mono font-medium text-blue-600 dark:text-blue-400">{course.code}</span>
+                            </td>
+                            <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{course.name}</td>
+                            <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{course.department}</td>
+                            <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{course.credits}</td>
+                            <td className="max-w-xs px-6 py-4 text-sm text-gray-600 truncate dark:text-gray-400">
+                                {getFacultyNames(course.facultyIds)}
+                            </td>
+                            <td className="px-6 py-4">
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
+                                    {course.enrollmentCount}
+                                </span>
+                            </td>
+                            <td className="px-2 py-4 space-x-2 text-sm font-medium text-right">
+                                <button className="cursor-pointer">
+                                    <Link href={`/courses/${course.id}`} className="text-blue-600 dark:text-blue-400">
+                                        <Eye className="w-6 h-6" />
+                                    </Link>
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setEditTarget(course); setShowEditModal(true); }}
+                                    className="text-green-600 cursor-pointer dark:text-green-400"
+                                >
+                                    <EditIcon className="w-5 h-5" />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setConfirmTargetId(course.id); setShowConfirm(true); }}
+                                    className="text-red-600 cursor-pointer dark:text-red-400"
+                                >
+                                    <Trash2 className="w-5 h-5" />
+                                </button>
+                            </td>
+                        </>
                     )}
-                </div>
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
+                    emptyMessage="No courses found."
+                />
             </AnimatedSection>
 
             {/* Add Course Modal */}

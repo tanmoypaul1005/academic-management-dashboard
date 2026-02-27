@@ -9,11 +9,11 @@ import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
 import CommonModal from '@/components/CommonModal';
 import StudentForm from '@/components/StudentForm';
-import Pagination from '@/components/Pagination';
 import ConfirmModal from '@/components/ConfirmModal';
 import { useRouter } from 'next/navigation';
 import { EditIcon, Eye, Trash2 } from 'lucide-react';
 import CommonButton from '@/components/CommonButton';
+import CommonTable, { TableColumn } from '@/components/CommonTable';
 
 export default function StudentsPage() {
     const [students, setStudents] = useState<Student[]>([]);
@@ -342,101 +342,69 @@ export default function StudentsPage() {
 
             {/* Students Table */}
             <AnimatedSection animation="slideUp" delay={0.2}>
-                <div className="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 dark:border-slate-700">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="border-b border-gray-200 bg-gray-50 dark:bg-slate-700 dark:border-slate-600">
-                                <tr>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Student
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Major
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Year
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        GPA
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Courses
-                                    </th>
-                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-right text-gray-500 uppercase dark:text-gray-400">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
-                                {paginatedStudents.map((student) => (
-                                    <tr
-                                        onClick={() => {
-                                            router.push(`/students/${student.id}`);
-                                        }}
-                                        key={student.id}
-                                        className={`cursor-pointer transition-all duration-500 ${deletingId === student.id
-                                            ? 'opacity-0 scale-95 bg-red-50 dark:bg-red-900/20'
-                                            : highlightId === student.id
-                                                ? 'bg-green-50 dark:bg-green-900/20'
-                                                : 'hover:bg-gray-50 dark:hover:bg-slate-700/50'
-                                            }`}>
-                                        <td className="px-6 py-4">
-                                            <div>
-                                                <div className="font-medium text-gray-900 dark:text-white">{student.name}</div>
-                                                <div className="text-sm text-gray-500 dark:text-gray-400">{student.email}</div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{student.major}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{student.year}</td>
-                                        <td className="px-6 py-4">
-                                            <span className="font-bold text-blue-600 dark:text-blue-400">{student?.gpa?.toFixed(2)}</span>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium">
-                                                {student.enrolledCourses.length} courses
-                                            </span>
-                                        </td>
-                                        <td className="px-3 py-4 space-x-2 text-sm font-medium text-right">
-                                            <button>
-                                                <Link
-                                                    href={`/students/${student.id}`}
-                                                    className="text-blue-600 transition-colors dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
-                                                >
-                                                    <Eye className="w-6 h-6" />
-                                                </Link>
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setEditTarget(student);
-                                                    setShowEditModal(true);
-                                                }}
-                                                className="text-green-600 transition-colors cursor-pointer dark:text-green-400 hover:text-green-900 dark:hover:text-green-300"
-                                            >
-                                                <EditIcon className="w-5 h-5" />
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setConfirmTargetId(student.id);
-                                                    setShowConfirm(true);
-                                                }}
-                                                className="text-red-600 transition-colors cursor-pointer dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
-                                            >
-                                                <Trash2 className="w-5 h-5" />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                        <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
+                <CommonTable
+                    columns={[
+                        { label: 'Student' },
+                        { label: 'Major' },
+                        { label: 'Year' },
+                        { label: 'GPA' },
+                        { label: 'Courses' },
+                        { label: 'Actions', className: 'text-right' },
+                    ] satisfies TableColumn[]}
+                    rows={paginatedStudents}
+                    onRowClick={(student) => router.push(`/students/${student.id}`)}
+                    getRowClassName={(student) =>
+                        deletingId === student.id
+                            ? 'opacity-0 scale-95 bg-red-50 dark:bg-red-900/20'
+                            : highlightId === student.id
+                                ? 'bg-green-50 dark:bg-green-900/20'
+                                : 'hover:bg-gray-50 dark:hover:bg-slate-700/50'
+                    }
+                    renderRow={(student) => (
+                        <>
+                            <td className="px-6 py-4">
+                                <div className="font-medium text-gray-900 dark:text-white">{student.name}</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400">{student.email}</div>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{student.major}</td>
+                            <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{student.year}</td>
+                            <td className="px-6 py-4">
+                                <span className="font-bold text-blue-600 dark:text-blue-400">{student?.gpa?.toFixed(2)}</span>
+                            </td>
+                            <td className="px-6 py-4">
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium">
+                                    {student.enrolledCourses.length} courses
+                                </span>
+                            </td>
+                            <td className="px-3 py-4 space-x-2 text-sm font-medium text-right">
+                                <button>
+                                    <Link
+                                        href={`/students/${student.id}`}
+                                        className="text-blue-600 transition-colors dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
+                                    >
+                                        <Eye className="w-6 h-6" />
+                                    </Link>
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setEditTarget(student); setShowEditModal(true); }}
+                                    className="text-green-600 transition-colors cursor-pointer dark:text-green-400 hover:text-green-900 dark:hover:text-green-300"
+                                >
+                                    <EditIcon className="w-5 h-5" />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setConfirmTargetId(student.id); setShowConfirm(true); }}
+                                    className="text-red-600 transition-colors cursor-pointer dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                                >
+                                    <Trash2 className="w-5 h-5" />
+                                </button>
+                            </td>
+                        </>
                     )}
-                </div>
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
+                    emptyMessage="No students found."
+                />
             </AnimatedSection>
 
             {/* Add Student Modal */}
