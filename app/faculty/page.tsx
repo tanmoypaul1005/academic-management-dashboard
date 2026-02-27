@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { studentsApi, coursesApi, gradesApi } from '@/lib/api';
 import { Student, Course, GradeFormData } from '@/types';
 import AnimatedSection from '@/components/AnimatedSection';
+import CommonLabel from '@/components/CommonLabel';
 import CommonSelect from '@/components/CommonSelect';
 import GradeSuccessModal from '@/components/GradeSuccessModal';
 import SuccessModal from '@/components/SuccessModal';
@@ -261,9 +262,9 @@ export default function FacultyPage() {
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Assign Students to Course</h2>
                 
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <CommonLabel spacing="mb-2">
                     Select Course
-                  </label>
+                  </CommonLabel>
                   <select
                     value={selectedCourse}
                     onChange={(e) => setSelectedCourse(e.target.value)}
@@ -279,9 +280,9 @@ export default function FacultyPage() {
                 </div>
 
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <CommonLabel spacing="mb-2">
                     Select Students
-                  </label>
+                  </CommonLabel>
                   <div className="p-4 overflow-y-auto bg-white border border-gray-300 rounded-lg dark:border-slate-600 max-h-80 dark:bg-slate-700">
                     {students.map(student => (
                       <label key={student.id} className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50">
@@ -325,9 +326,9 @@ export default function FacultyPage() {
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div>
-                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Student <span className="text-red-500 dark:text-red-400">*</span>
-                    </label>
+                    <CommonLabel spacing="mb-2" required>
+                      Student
+                    </CommonLabel>
                     <select
                       value={gradeForm.studentId}
                       onChange={(e) => setGradeForm({ ...gradeForm, studentId: e.target.value, courseId: '' })}
@@ -344,9 +345,9 @@ export default function FacultyPage() {
                   </div>
 
                   <div>
-                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Course <span className="text-red-500 dark:text-red-400">*</span>
-                    </label>
+                    <CommonLabel spacing="mb-2" required>
+                      Course
+                    </CommonLabel>
                     {(() => {
                       const selectedStudent = students.find(s => s.id === gradeForm.studentId);
                       const enrolledCourses = selectedStudent
@@ -387,9 +388,9 @@ export default function FacultyPage() {
                   </div>
 
                   <div>
-                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Letter Grade <span className="text-red-500 dark:text-red-400">*</span>
-                    </label>
+                    <CommonLabel spacing="mb-2" required>
+                      Letter Grade
+                    </CommonLabel>
                     <select
                       value={gradeForm.grade}
                       onChange={(e) => setGradeForm({ ...gradeForm, grade: e.target.value })}
@@ -411,9 +412,9 @@ export default function FacultyPage() {
                   </div>
 
                   <div>
-                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Numeric Grade (%) <span className="text-red-500 dark:text-red-400">*</span>
-                    </label>
+                    <CommonLabel spacing="mb-2" required>
+                      Numeric Grade (%)
+                    </CommonLabel>
                     <input
                       type="number"
                       min="0"
@@ -457,9 +458,9 @@ export default function FacultyPage() {
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Bulk Student Operations</h2>
 
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <CommonLabel spacing="mb-2">
                     Action Type
-                  </label>
+                  </CommonLabel>
                   <select
                     value={bulkAction}
                     onChange={(e) => setBulkAction(e.target.value as 'enroll' | 'unenroll')}
@@ -471,9 +472,9 @@ export default function FacultyPage() {
                 </div>
 
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <CommonLabel spacing="mb-2">
                     Select Course
-                  </label>
+                  </CommonLabel>
                   <select
                     value={bulkCourse}
                     onChange={(e) => setBulkCourse(e.target.value)}
@@ -489,9 +490,9 @@ export default function FacultyPage() {
                 </div>
 
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <CommonLabel spacing="mb-2">
                     Select Students (Multiple)
-                  </label>
+                  </CommonLabel>
                   <div className="p-4 overflow-y-auto bg-white border border-gray-300 rounded-lg dark:border-slate-600 max-h-80 dark:bg-slate-700">
                     {students.map(student => (
                       <label key={student.id} className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50">
