@@ -1,115 +1,19 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { studentsApi, coursesApi, facultyApi } from '@/lib/api';
-import { Student, Course, Faculty } from '@/types';
+import { getStudents, getCourses, getFaculty } from '@/app/api/data';
 import { getTopStudents, getMostPopularCourses } from '@/lib/utils';
 import StatCard from '@/components/StatCard';
 import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
-import dynamic from 'next/dynamic';
+import DashboardChart from '@/components/DashboardChart';
 
-// Dynamically import ApexCharts to avoid SSR issues
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-
-export default function Dashboard() {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [faculty, setFaculty] = useState<Faculty[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [studentsData, coursesData, facultyData] = await Promise.all([
-          studentsApi.getAll(),
-          coursesApi.getAll(),
-          facultyApi.getAll(),
-        ]);
-        setStudents(studentsData);
-        setCourses(coursesData);
-        setFaculty(facultyData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="w-12 h-12 mx-auto border-b-2 border-blue-600 rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
+export default async function Dashboard() {
+  const [students, courses, faculty] = await Promise.all([
+    getStudents(),
+    getCourses(),
+    getFaculty(),
+  ]);
 
   const topStudents = getTopStudents(students, 5);
   const popularCourses = getMostPopularCourses(courses, 5);
-
-  // Chart data for course enrollments
-  const courseChartOptions = {
-    chart: {
-      type: 'bar' as const,
-      toolbar: { show: false },
-      zoom: { enabled: false },
-      background: 'transparent',
-    },
-    theme: {
-      mode: 'dark' as const,
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        borderRadius: 4,
-      },
-    },
-    dataLabels: { enabled: false },
-    xaxis: {
-      categories: popularCourses.map(c => c.code),
-      labels: {
-        style: {
-          colors: '#94a3b8',
-        },
-      },
-    },
-    yaxis: {
-      labels: {
-        style: {
-          colors: '#94a3b8',
-        },
-      },
-    },
-    colors: ['#3B82F6'],
-    grid: {
-      borderColor: '#334155',
-    },
-    responsive: [
-      {
-        breakpoint: 640,
-        options: {
-          chart: { height: 220 },
-          xaxis: {
-            labels: {
-              rotate: -45,
-              style: { fontSize: '10px', colors: '#94a3b8' },
-            },
-          },
-        },
-      },
-    ],
-  };
-
-  const courseChartSeries = [
-    {
-      name: 'Students Enrolled',
-      data: popularCourses.map(c => c.enrollmentCount),
-    },
-  ];
 
   return (
     <div className="space-y-6">
@@ -149,12 +53,9 @@ export default function Dashboard() {
         <AnimatedCard delay={0.4} className="p-3 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-800 sm:p-6 dark:border-slate-700">
           <h2 className="mb-2 text-base font-bold text-gray-900 sm:text-lg dark:text-white">📊 Course Enrollments</h2>
           <div className="overflow-x-auto">
-            <Chart
-              options={courseChartOptions}
-              series={courseChartSeries}
-              type="bar"
-              height={280}
-              width="100%"
+            <DashboardChart
+              codes={popularCourses.map(c => c.code)}
+              enrollments={popularCourses.map(c => c.enrollmentCount)}
             />
           </div>
         </AnimatedCard>
@@ -215,13 +116,13 @@ export default function Dashboard() {
             {popularCourses.map((course, idx) => (
               <div
                 key={course.id}
-                className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-slate-700/50 border border-gray-100 dark:border-slate-700"
+                className="flex items-center gap-3 p-3 border border-gray-100 rounded-lg bg-gray-50 dark:bg-slate-700/50 dark:border-slate-700"
               >
-                <span className="shrink-0 w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-xs">
+                <span className="flex items-center justify-center text-xs font-bold text-blue-600 bg-blue-100 rounded-full shrink-0 w-7 h-7 dark:bg-blue-900/40 dark:text-blue-400">
                   {idx + 1}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{course.name}</p>
+                  <p className="text-sm font-semibold text-gray-900 truncate dark:text-white">{course.name}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                     <span className="font-mono text-blue-600 dark:text-blue-400">{course.code}</span>
                     <span className="mx-1">·</span>
@@ -236,7 +137,7 @@ export default function Dashboard() {
           </div>
 
           {/* Desktop table layout */}
-          <div className="hidden sm:block overflow-x-auto">
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full">
               <thead>
                 <tr className="text-left border-b border-gray-200 dark:border-slate-700">
