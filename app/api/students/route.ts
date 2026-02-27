@@ -7,7 +7,6 @@ export async function GET(request: Request) {
   const limit = Math.max(1, parseInt(url.searchParams.get('limit') || '10'));
 
   const all = await getStudents();
-  console.log(`Total students: `,all);
   const start = (page - 1) * limit;
   const end = start + limit;
   const paged = all.slice(start, end);

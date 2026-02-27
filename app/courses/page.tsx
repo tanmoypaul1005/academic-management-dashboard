@@ -14,6 +14,7 @@ import CourseEditModal from '@/components/CourseEditModal';
 import ConfirmModal from '@/components/ConfirmModal';
 import { useRouter } from 'next/navigation';
 import { EditIcon, Eye, Trash2 } from 'lucide-react';
+import CommonButton from '@/components/CommonButton';
 
 export default function CoursesPage() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -226,12 +227,11 @@ export default function CoursesPage() {
                         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">Courses</h1>
                         <p className="text-gray-600 dark:text-gray-400">Manage courses and faculty assignments</p>
                     </div>
-                    <button
+              
+                    <CommonButton
                         onClick={() => setShowAddModal(true)}
-                        className="px-4 py-2 text-white transition-colors bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg"
-                    >
-                        + Add Course
-                    </button>
+                        title="Add Course"
+                    />
                 </div>
             </AnimatedSection>
 
@@ -338,7 +338,7 @@ export default function CoursesPage() {
                                             </span>
                                         </td>
                                         <td className="px-2 py-4 space-x-2 text-sm font-medium text-right">
-                                            <button>
+                                            <button className='cursor-pointer'>
                                                 <Link
                                                     href={`/courses/${course.id}`}
                                                     className="text-blue-600 dark:text-blue-400"
@@ -353,7 +353,7 @@ export default function CoursesPage() {
                                                     setEditTarget(course);
                                                     setShowEditModal(true);
                                                 }}
-                                                className="text-green-600 dark:text-green-400"
+                                                className="text-green-600 cursor-pointer dark:text-green-400"
                                             >
                                                 <EditIcon className="w-5 h-5" />
                                             </button>
@@ -363,7 +363,7 @@ export default function CoursesPage() {
                                                     setConfirmTargetId(course.id);
                                                     setShowConfirm(true);
                                                 }}
-                                                className="text-red-600 dark:text-red-400"
+                                                className="text-red-600 cursor-pointer dark:text-red-400"
                                             >
                                                 <Trash2 className="w-5 h-5" />
                                             </button>
