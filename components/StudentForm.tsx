@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Student, Course, StudentFormData } from '@/types';
 import { studentsApi, coursesApi } from '@/lib/api';
 import CommonInput from './CommonInput';
+import CommonLabel from './CommonLabel';
 import CommonSelect from './CommonSelect';
 
 interface StudentFormProps {
@@ -184,9 +185,9 @@ export default function StudentForm({ student, mode, onSuccess }: StudentFormPro
 
         {/* Enrolled Courses - Dynamic Multi-select */}
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <CommonLabel spacing="mb-2">
             Enrolled Courses
-          </label>
+          </CommonLabel>
           <div className="border border-gray-300 dark:border-slate-600 rounded-lg p-4 max-h-60 overflow-y-auto bg-white dark:bg-slate-700">
             {courses.length === 0 ? (
               <p className="text-gray-500 dark:text-gray-400 text-sm">No courses available</p>

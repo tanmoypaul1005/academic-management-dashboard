@@ -13,6 +13,7 @@ import ConfirmModal from '@/components/ConfirmModal';
 import { useRouter } from 'next/navigation';
 import { EditIcon, Eye, Trash2 } from 'lucide-react';
 import CommonButton from '@/components/CommonButton';
+import CommonLabel from '@/components/CommonLabel';
 import CommonTable, { TableColumn } from '@/components/CommonTable';
 
 export default function StudentsPage() {
@@ -261,9 +262,9 @@ export default function StudentsPage() {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                     {/* Search */}
                     <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <CommonLabel>
                             Search
-                        </label>
+                        </CommonLabel>
                         <input
                             type="text"
                             placeholder="Search by name, email, or major..."
@@ -278,9 +279,9 @@ export default function StudentsPage() {
 
                     {/* Year Filter */}
                     <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <CommonLabel>
                             Year
-                        </label>
+                        </CommonLabel>
                         <select
                             value={selectedYear || ''}
                             onChange={(e) => {
@@ -298,9 +299,9 @@ export default function StudentsPage() {
 
                     {/* Major Filter */}
                     <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <CommonLabel>
                             Major
-                        </label>
+                        </CommonLabel>
                         <select
                             value={selectedMajor}
                             onChange={(e) => {
@@ -318,9 +319,9 @@ export default function StudentsPage() {
 
                     {/* Course Filter */}
                     <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <CommonLabel>
                             Course
-                        </label>
+                        </CommonLabel>
                         <select
                             value={selectedCourse}
                             onChange={(e) => {

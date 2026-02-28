@@ -13,6 +13,7 @@ import CourseEditModal from '@/components/CourseEditModal';
 import ConfirmModal from '@/components/ConfirmModal';
 import { useRouter } from 'next/navigation';
 import { EditIcon, Eye, Trash2 } from 'lucide-react';
+import CommonLabel from '@/components/CommonLabel';
 import CommonButton from '@/components/CommonButton';
 import CommonTable, { TableColumn } from '@/components/CommonTable';
 
@@ -245,9 +246,9 @@ export default function CoursesPage() {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {/* Search */}
                     <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <CommonLabel>
                             Search
-                        </label>
+                        </CommonLabel>
                         <input
                             type="text"
                             placeholder="Search by course name or code..."
@@ -262,9 +263,9 @@ export default function CoursesPage() {
 
                     {/* Department Filter */}
                     <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <CommonLabel>
                             Department
-                        </label>
+                        </CommonLabel>
                         <select
                             value={selectedDepartment}
                             onChange={(e) => {
